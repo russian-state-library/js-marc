@@ -1,9 +1,10 @@
 import { IMarkField } from "./interfaces";
 import { MarkField } from "./field.mark";
 import { Field } from "./schema/field.schema";
-import { Schema } from "./schema/index";
+import { Schema } from "./schema";
 import { Validator } from "neck-validator";
 import { ILocalization } from "./interfaces";
+import { Validator as MarkValidator } from "./validator";
 
 class Mark {
 
@@ -12,11 +13,11 @@ class Mark {
     }
 
     static getRequiredFields(): Field[] {
-        return Mark.fields().filter((field: Field): boolean => field.isRequired);;
+        return Mark.fields().filter((field: Field): boolean => field.isRequired);
     }
 
     static getRepeatableFields(): Field[] {
-        return Mark.fields().filter((field: Field): boolean => field.isRepeatable);;
+        return Mark.fields().filter((field: Field): boolean => field.isRepeatable);
     }
 
     static field(code: string): Field|undefined {
@@ -33,7 +34,7 @@ class Mark {
         for (let i = 0, length = fields.length; i < length; ++i) {
           if (Mark.isExistsField(fields[i].code)) {
             const markField = Mark.field(fields[i].code);
-            
+
             if (!validationFields.includes(markField)) validationFields.push(markField);
 
             validationData.push(new MarkField(fields[i].code, fields[i].ind1, fields[i].ind2, fields[i].subfields, fields[i].value));
@@ -93,4 +94,4 @@ class Mark {
 
 }
 
-export { Mark, Schema, ILocalization };
+export { Mark, Schema, MarkValidator, ILocalization };
