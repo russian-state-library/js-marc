@@ -20,27 +20,27 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Schema = exports.Mark = void 0;
+exports.MarkValidator = exports.Schema = exports.Mark = void 0;
 var field_mark_1 = require("./field.mark");
-var index_1 = require("./schema/index");
-Object.defineProperty(exports, "Schema", { enumerable: true, get: function () { return index_1.Schema; } });
+var schema_1 = require("./schema");
+Object.defineProperty(exports, "Schema", { enumerable: true, get: function () { return schema_1.Schema; } });
 var neck_validator_1 = require("neck-validator");
+var validator_1 = require("./validator");
+Object.defineProperty(exports, "MarkValidator", { enumerable: true, get: function () { return validator_1.Validator; } });
 var Mark = /** @class */ (function () {
     function Mark() {
     }
     Mark.fields = function () {
-        return index_1.Schema.fields();
+        return schema_1.Schema.fields();
     };
     Mark.getRequiredFields = function () {
         return Mark.fields().filter(function (field) { return field.isRequired; });
-        ;
     };
     Mark.getRepeatableFields = function () {
         return Mark.fields().filter(function (field) { return field.isRepeatable; });
-        ;
     };
     Mark.field = function (code) {
-        return index_1.Schema.field(code);
+        return schema_1.Schema.field(code);
     };
     Mark.validate = function (fields) {
         var validationFields = Mark.getRequiredFields();
@@ -74,7 +74,7 @@ var Mark = /** @class */ (function () {
                 args[_i - 2] = arguments[_i];
             }
             for (var i = 0, length_2 = rules.length; i < length_2; ++i) {
-                response.push(index_1.Schema.getRuleLocalization.apply(index_1.Schema, __spreadArray(["".concat(rules[i].rule, "_").concat(type)], args, false)).trim());
+                response.push(schema_1.Schema.getRuleLocalization.apply(schema_1.Schema, __spreadArray(["".concat(rules[i].rule, "_").concat(type)], args, false)).trim());
             }
         };
         for (var errorKey in errors) {

@@ -1,7 +1,8 @@
 import { IMarkField } from "./interfaces";
 import { Field } from "./schema/field.schema";
-import { Schema } from "./schema/index";
+import { Schema } from "./schema";
 import { ILocalization } from "./interfaces";
+import { Validator as MarkValidator } from "./validator";
 declare class Mark {
     static fields(): Field[];
     static getRequiredFields(): Field[];
@@ -11,4 +12,4 @@ declare class Mark {
     private static isExistsField;
     private static formatErrors;
 }
-export { Mark, Schema, ILocalization };
+export { Mark, Schema, MarkValidator, ILocalization };
