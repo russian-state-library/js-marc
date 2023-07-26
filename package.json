@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "start:dev": "npx nodemon",
+    "start:dev": "npm run build && npx nodemon",
     "start": "npm run build && node build/index.js",
     "build": "rimraf ./build && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
