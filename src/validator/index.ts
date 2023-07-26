@@ -10,6 +10,8 @@ export class Validator {
 
     private validators: object[];
 
+    private alwaysRequired: object[];
+
     private messages: object[];
 
     private fields: object[];
@@ -27,8 +29,11 @@ export class Validator {
             '$schema': string,
             validators: {
                 condition: object
-            }[]
+            }[],
+            required: object[]
         } = JSON.parse(readFileSync(path, { encoding: 'utf-8' }));
+
+        classValidator.alwaysRequired = schema.required ?? [];
 
         schema.validators.forEach((validator: { condition: object, validator: object, messages?: object }) => {
             classValidator.rules.push(this.parseConditionFromSchema(validator.condition));
@@ -133,16 +138,45 @@ export class Validator {
         return this.errors;
     }
 
-    private validate(rules): string[] {
-        const errors = [];
-
+    private validate(rules) {
         rules.forEach((rule, index) => {
             const fields = this.findCondition(rule, this.fields);
 
             fields.filter(field => !this.isValidField(field, index));
         });
 
-        return errors;
+        const alwaysRequired = Validator.instance.alwaysRequired;
+
+        alwaysRequired.forEach(alwaysRequiredRule => {
+            const fields = this.fields.filter(field => {
+                const isValid = Object.keys(alwaysRequiredRule).map(rule => {
+                    if (rule === 'subfields')
+                        return !alwaysRequiredRule['subfields'].map(subfield => field[subfield] !== undefined).includes(false);
+
+                    return field[rule] === alwaysRequiredRule[rule];
+                });
+
+                return !isValid.includes(false);
+            });
+
+            if (fields.length === 0) {
+                let message = `Не передано обязательное поле ${alwaysRequiredRule['code']}`;
+
+                if ('ind1' in alwaysRequiredRule) {
+                    message += ', первый индикатор';
+                }
+
+                if ('ind2' in alwaysRequiredRule) {
+                    message += ', второй индикатор';
+                }
+
+                if ('subfields' in alwaysRequiredRule) {
+                    message += ', подполя: ' + (<Array<string>>alwaysRequiredRule['subfields']).map(subfield => `$${subfield}`);
+                }
+
+                this.errors.push(message);
+            }
+        })
     }
 
     private findCondition(condition: { type: string, conditions: any[] }, fields: object[]) {

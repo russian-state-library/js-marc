@@ -3,6 +3,7 @@ export declare class Validator {
     private static instance;
     private rules;
     private validators;
+    private alwaysRequired;
     private messages;
     private fields;
     private errors;

@@ -18,11 +18,13 @@ var Validator = /** @class */ (function () {
     }
     Validator.loadCustomRulesFromSchema = function (path) {
         var _this = this;
+        var _a;
         var classValidator = new Validator();
         classValidator.rules = [];
         classValidator.validators = [];
         classValidator.messages = [];
         var schema = JSON.parse((0, fs_1.readFileSync)(path, { encoding: 'utf-8' }));
+        classValidator.alwaysRequired = (_a = schema.required) !== null && _a !== void 0 ? _a : [];
         schema.validators.forEach(function (validator) {
             classValidator.rules.push(_this.parseConditionFromSchema(validator.condition));
             classValidator.validators.push(validator.validator);
@@ -92,12 +94,34 @@ var Validator = /** @class */ (function () {
     };
     Validator.prototype.validate = function (rules) {
         var _this = this;
-        var errors = [];
         rules.forEach(function (rule, index) {
             var fields = _this.findCondition(rule, _this.fields);
             fields.filter(function (field) { return !_this.isValidField(field, index); });
         });
-        return errors;
+        var alwaysRequired = Validator.instance.alwaysRequired;
+        alwaysRequired.forEach(function (alwaysRequiredRule) {
+            var fields = _this.fields.filter(function (field) {
+                var isValid = Object.keys(alwaysRequiredRule).map(function (rule) {
+                    if (rule === 'subfields')
+                        return !alwaysRequiredRule['subfields'].map(function (subfield) { return field[subfield] !== undefined; }).includes(false);
+                    return field[rule] === alwaysRequiredRule[rule];
+                });
+                return !isValid.includes(false);
+            });
+            if (fields.length === 0) {
+                var message = "\u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D\u043E \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u043F\u043E\u043B\u0435 ".concat(alwaysRequiredRule['code']);
+                if ('ind1' in alwaysRequiredRule) {
+                    message += ', первый индикатор';
+                }
+                if ('ind2' in alwaysRequiredRule) {
+                    message += ', второй индикатор';
+                }
+                if ('subfields' in alwaysRequiredRule) {
+                    message += ', подполя: ' + alwaysRequiredRule['subfields'].map(function (subfield) { return "$".concat(subfield); });
+                }
+                _this.errors.push(message);
+            }
+        });
     };
     Validator.prototype.findCondition = function (condition, fields) {
         var _this = this;
