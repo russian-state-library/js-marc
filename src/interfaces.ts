@@ -1,7 +1,7 @@
 export interface IRule {
     key: string,
     rule: string[]
-};
+}
 
 export interface IMarkField {
     code: string,
@@ -12,7 +12,7 @@ export interface IMarkField {
         value: string 
     }[],
     value?: string
-};
+}
 
 export interface ILocalization {
     required_field: string,
