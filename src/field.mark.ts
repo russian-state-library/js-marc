@@ -1,4 +1,4 @@
-import { Schema } from './schema/index';
+import { Schema } from './schema';
 import { IMarkField } from './interfaces';
 import { Indicator } from './schema/indicator.schema';
 
@@ -15,7 +15,7 @@ export class MarkField implements IMarkField {
     toValidatorStructure(): object {
         const schemaField = Schema.field(this.code);
 
-        const response = {};
+        const response = { code: this.code };
 
         schemaField?.indicators?.forEach((indicator: Indicator) => response[indicator.name] = this[indicator.name]);
 
