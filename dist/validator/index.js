@@ -127,8 +127,8 @@ var Validator = /** @class */ (function () {
         var _this = this;
         var type = condition.type;
         var copyFields = Array.from(fields);
-        condition.conditions.filter(function (cond, index) {
-            if ('conditions' in cond) {
+        condition.conditions.forEach(function (cond, index) {
+            if (typeof cond === 'object' && 'conditions' in cond) {
                 copyFields = _this.findCondition(cond, copyFields);
                 condition.conditions[index] = copyFields.length > 0;
             }

@@ -184,8 +184,8 @@ export class Validator {
 
         let copyFields = Array.from(fields);
 
-        condition.conditions.filter((cond, index) => {
-            if ('conditions' in cond) {
+        condition.conditions.forEach((cond, index) => {
+            if (typeof cond === 'object' && 'conditions' in cond) {
                 copyFields = this.findCondition(cond, copyFields);
                 condition.conditions[index] = copyFields.length > 0;
             }
