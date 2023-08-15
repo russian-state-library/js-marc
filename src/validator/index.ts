@@ -51,7 +51,7 @@ export class Validator {
             (new MarkField(field.code, field.ind1, field.ind2, field.subfields, field.value)).toValidatorStructure()
         ));
 
-        classValidator.validate(Validator.instance.rules);
+        classValidator.validate(JSON.parse(JSON.stringify(Validator.instance.rules)));
 
         return classValidator;
     }
