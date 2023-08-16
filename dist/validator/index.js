@@ -35,7 +35,7 @@ var Validator = /** @class */ (function () {
     Validator.validate = function (fields) {
         var classValidator = new Validator();
         classValidator.fields = fields.map(function (field) { return ((new field_mark_1.MarkField(field.code, field.ind1, field.ind2, field.subfields, field.value)).toValidatorStructure()); });
-        classValidator.validate(Validator.instance.rules);
+        classValidator.validate(JSON.parse(JSON.stringify(Validator.instance.rules)));
         return classValidator;
     };
     Validator.equals = function (val1, val2) {
