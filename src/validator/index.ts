@@ -92,9 +92,7 @@ export class Validator {
 
         const stop = params[1];
 
-        console.log(params )
-
-        return params.slice(2).includes(value.slice(+start - 1, +stop - 1));
+        return params.slice(2).includes((value ?? '').slice(+start - 1, +stop - 1));
     }
 
     static substringEqualsFieldSubfield(

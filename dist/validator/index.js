@@ -70,8 +70,7 @@ var Validator = /** @class */ (function () {
         }
         var start = params[0];
         var stop = params[1];
-        console.log(params);
-        return params.slice(2).includes(value.slice(+start - 1, +stop - 1));
+        return params.slice(2).includes((value !== null && value !== void 0 ? value : '').slice(+start - 1, +stop - 1));
     };
     Validator.substringEqualsFieldSubfield = function (value, start, stop, filterFieldIndicator, filterFieldValue, subfieldKey, fields) {
         var substring = (value !== null && value !== void 0 ? value : '').substring(start - 1, stop);
