@@ -50,8 +50,28 @@ var Validator = /** @class */ (function () {
     Validator.whereIn = function (value, list) {
         return list.includes(value);
     };
+    Validator.substringEqualsRegex = function (value, start, stop, regex) {
+        var regexp = new RegExp(regex);
+        return regexp.test(value.slice(+start - 1, +stop - 1));
+    };
     Validator.required = function (value) {
         return value !== undefined;
+    };
+    Validator.substringEquals = function (value) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        if (typeof params[params.length - 1] === 'object') {
+            params = params.slice(0, -1);
+        }
+        else {
+            params = params[0].split(',');
+        }
+        var start = params[0];
+        var stop = params[1];
+        console.log(params);
+        return params.slice(2).includes(value.slice(+start - 1, +stop - 1));
     };
     Validator.substringEqualsFieldSubfield = function (value, start, stop, filterFieldIndicator, filterFieldValue, subfieldKey, fields) {
         var substring = (value !== null && value !== void 0 ? value : '').substring(start - 1, stop);

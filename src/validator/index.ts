@@ -51,7 +51,7 @@ export class Validator {
             (new MarkField(field.code, field.ind1, field.ind2, field.subfields, field.value)).toValidatorStructure()
         ));
 
-        classValidator.validate(JSON.parse(JSON.stringify(Validator.instance.rules)));
+        classValidator.validate(JSON.parse(JSON.stringify(Validator.instance.rules))  );
 
         return classValidator;
     }
@@ -72,8 +72,29 @@ export class Validator {
         return list.includes(value);
     }
 
+    static substringEqualsRegex(value: string, start: number, stop: number, regex: string) {
+        const regexp = new RegExp(regex);
+        return regexp.test(value.slice(+start - 1, +stop - 1));
+    }
+
     static required(value: any): boolean {
         return value !== undefined;
+    }
+
+    static substringEquals(value: string, ...params: any) {
+        if (typeof params[params.length - 1] === 'object') {
+            params = params.slice(0, -1)
+        } else {
+            params = params[0].split(',');
+        }
+
+        const start = params[0];
+
+        const stop = params[1];
+
+        console.log(params )
+
+        return params.slice(2).includes(value.slice(+start - 1, +stop - 1));
     }
 
     static substringEqualsFieldSubfield(

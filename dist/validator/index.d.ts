@@ -13,7 +13,9 @@ export declare class Validator {
     static notEquals(val1: any, val2: any): boolean;
     static whereNotIn(value: any, list: any[]): boolean;
     static whereIn(value: any, list: any[]): boolean;
+    static substringEqualsRegex(value: string, start: number, stop: number, regex: string): boolean;
     static required(value: any): boolean;
+    static substringEquals(value: string, ...params: any): any;
     static substringEqualsFieldSubfield(value: string, start: number, stop: number, filterFieldIndicator: string, filterFieldValue: any, subfieldKey: string, fields: object[]): boolean;
     private static parseConditionFromSchema;
     isError(): boolean;
