@@ -7,6 +7,7 @@ export declare class Validator {
     private messages;
     private fields;
     private errors;
+    private currentField;
     static loadCustomRulesFromSchema(path: string): Validator;
     static validate(fields: IMarkField[]): Validator;
     static equals(val1: any, val2: any): boolean;
@@ -14,6 +15,7 @@ export declare class Validator {
     static whereNotIn(value: any, list: any[]): boolean;
     static whereIn(value: any, list: any[]): boolean;
     static substringEqualsRegex(value: string, start: number, stop: number, regex: string): boolean;
+    static relations(value: string, equalsIndicators: string, equalsSubfields: string, ...args: any[]): boolean;
     static required(value: any): boolean;
     static substringEquals(value: string, ...params: any): any;
     static substringEqualsFieldSubfield(value: string, start: number, stop: number, filterFieldIndicator: string, filterFieldValue: any, subfieldKey: string, fields: object[]): boolean;

@@ -15,6 +15,7 @@ var field_mark_1 = require("../field.mark");
 var Validator = /** @class */ (function () {
     function Validator() {
         this.errors = [];
+        this.currentField = null;
     }
     Validator.loadCustomRulesFromSchema = function (path) {
         var _this = this;
@@ -53,6 +54,42 @@ var Validator = /** @class */ (function () {
     Validator.substringEqualsRegex = function (value, start, stop, regex) {
         var regexp = new RegExp(regex);
         return regexp.test(value.slice(+start - 1, +stop - 1));
+    };
+    Validator.relations = function (value, equalsIndicators, equalsSubfields) {
+        var args = [];
+        for (var _i = 3; _i < arguments.length; _i++) {
+            args[_i - 3] = arguments[_i];
+        }
+        var code = value.slice(0, 3);
+        var index = value.slice(4, 6);
+        var fields = args.slice(-1)[0];
+        var relationField = fields.filter(function (f) { return f.code === code; })[0];
+        if (!relationField || !relationField['6'])
+            return false;
+        var currentField = Validator.instance.currentField;
+        if (equalsSubfields === 'false' && equalsIndicators === 'false') {
+            var relationFieldCode = relationField['6'].slice(0, 3);
+            var relationFieldIndex = relationField['6'].slice(4, 6);
+            //@ts-ignore
+            if (currentField.code !== relationFieldCode || index !== relationFieldIndex)
+                return false;
+        }
+        if (equalsIndicators === 'true'
+            && (
+            //@ts-ignore
+            relationField.ind1 !== currentField.ind1 ||
+                //@ts-ignore
+                relationField.ind2 !== currentField.ind2))
+            return false;
+        if (equalsSubfields === 'true') {
+            var subfields = Object.keys(currentField).filter(function (key) { return !['code', 'ind1', 'ind2'].includes(key); });
+            for (var i = 0; i < subfields.length; ++i) {
+                if (!(subfields[i] in relationField)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     };
     Validator.required = function (value) {
         return value !== undefined;
@@ -115,7 +152,12 @@ var Validator = /** @class */ (function () {
         var _this = this;
         rules.forEach(function (rule, index) {
             var fields = _this.findCondition(rule, _this.fields);
-            fields.filter(function (field) { return !_this.isValidField(field, index); });
+            fields.filter(function (field) {
+                Validator.instance.currentField = field;
+                var isValid = !_this.isValidField(field, index);
+                Validator.instance.currentField = null;
+                return isValid;
+            });
         });
         var alwaysRequired = Validator.instance.alwaysRequired;
         alwaysRequired.forEach(function (alwaysRequiredRule) {

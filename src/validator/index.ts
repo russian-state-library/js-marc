@@ -18,6 +18,8 @@ export class Validator {
 
     private errors: string[] = [];
 
+    private currentField: object = null;
+
     static loadCustomRulesFromSchema(path: string): Validator {
         const classValidator = new Validator();
 
@@ -75,6 +77,52 @@ export class Validator {
     static substringEqualsRegex(value: string, start: number, stop: number, regex: string) {
         const regexp = new RegExp(regex);
         return regexp.test(value.slice(+start - 1, +stop - 1));
+    }
+
+    static relations(value: string, equalsIndicators: string, equalsSubfields: string, ...args) {
+        const code = value.slice(0, 3);
+
+        const index = value.slice(4, 6);
+
+        const fields = <IMarkField[]>args.slice(-1)[0];
+
+        const relationField = fields.filter((f) => f.code === code)[0];
+
+        if (!relationField || !relationField['6']) return false;
+
+        const currentField = Validator.instance.currentField;
+
+        if (equalsSubfields === 'false' && equalsIndicators === 'false') {
+            const relationFieldCode = relationField['6'].slice(0, 3);
+
+            const relationFieldIndex = relationField['6'].slice(4, 6);
+
+            //@ts-ignore
+            if (currentField.code !== relationFieldCode || index !== relationFieldIndex)
+                return false;
+        }
+
+        if (
+            equalsIndicators === 'true'
+            && (
+                //@ts-ignore
+                relationField.ind1 !== currentField.ind1 ||
+                //@ts-ignore
+                relationField.ind2 !== currentField.ind2
+            )
+        ) return false;
+
+        if (equalsSubfields === 'true') {
+            const subfields = Object.keys(currentField).filter(key => !['code', 'ind1', 'ind2'].includes(key));
+
+            for (let i = 0; i < subfields.length; ++i) {
+                if (!(subfields[i] in relationField)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     static required(value: any): boolean {
@@ -161,7 +209,15 @@ export class Validator {
         rules.forEach((rule, index) => {
             const fields = this.findCondition(rule, this.fields);
 
-            fields.filter(field => !this.isValidField(field, index));
+            fields.filter(field => {
+                Validator.instance.currentField = field;
+
+                const isValid = !this.isValidField(field, index)
+
+                Validator.instance.currentField = null;
+
+                return isValid;
+            });
         });
 
         const alwaysRequired = Validator.instance.alwaysRequired;
