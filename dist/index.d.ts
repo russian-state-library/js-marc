@@ -7,8 +7,9 @@ declare class Mark {
     static fields(): Field[];
     static getRequiredFields(): Field[];
     static getRepeatableFields(): Field[];
+    static getActiveRslFields(): Field[];
     static field(code: string): Field | undefined;
-    static validate(fields: IMarkField[]): any[];
+    static validate(fields: IMarkField[]): string[];
     private static isExistsField;
     private static formatErrors;
 }

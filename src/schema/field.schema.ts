@@ -16,6 +16,7 @@ export class Field implements IField {
         public readonly code: string, 
         public readonly isRequired: boolean, 
         public readonly isRepeatable: boolean,
+        public readonly activeRsl: boolean,
         public indicators: Indicator[] = [],
         public subfields: Subfield[] = []
 

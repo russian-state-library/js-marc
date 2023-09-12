@@ -4,12 +4,13 @@ exports.Field = void 0;
 var neck_validator_1 = require("neck-validator");
 ;
 var Field = /** @class */ (function () {
-    function Field(code, isRequired, isRepeatable, indicators, subfields) {
+    function Field(code, isRequired, isRepeatable, activeRsl, indicators, subfields) {
         if (indicators === void 0) { indicators = []; }
         if (subfields === void 0) { subfields = []; }
         this.code = code;
         this.isRequired = isRequired;
         this.isRepeatable = isRepeatable;
+        this.activeRsl = activeRsl;
         this.indicators = indicators;
         this.subfields = subfields;
     }

@@ -65,7 +65,7 @@ export class Schema {
     }
 
     private encoder(field): Field {
-        const iField: Field = new Field(field.code, field.required, field.repeatable);
+        const iField: Field = new Field(field.code, field.required, field.repeatable, field.active_rsl ?? false);
 
         ['ind1', 'ind2'].forEach(ind => { 
             if (!!field[ind]) {

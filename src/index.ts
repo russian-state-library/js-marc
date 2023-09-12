@@ -20,40 +20,30 @@ class Mark {
         return Mark.fields().filter((field: Field): boolean => field.isRepeatable);
     }
 
+    static getActiveRslFields(): Field[] {
+        return Mark.fields().filter((field: Field) => field.activeRsl);
+    }
+
     static field(code: string): Field|undefined {
         return Schema.field(code);
     }
 
     static validate(fields: IMarkField[]) {
-        const validationFields = Mark.getRequiredFields();
-        
-        const validationData: MarkField[] = [];
-
-        let errors = {};
-
-        for (let i = 0, length = fields.length; i < length; ++i) {
-          if (Mark.isExistsField(fields[i].code)) {
-            const markField = Mark.field(fields[i].code);
-
-            if (!validationFields.includes(markField)) validationFields.push(markField);
-
-            validationData.push(new MarkField(fields[i].code, fields[i].ind1, fields[i].ind2, fields[i].subfields, fields[i].value));
-          }
-        }
-
-        validationFields.forEach((validationField: Field) => {
-            let needFields = validationData.filter((field: MarkField): boolean => field.code === validationField.code).map((field: MarkField): object => field.toValidatorStructure());
-
-            if (needFields.length === 0) needFields = undefined;
-
-            const validator = validationField.isValid(
-              (!validationField.isRepeatable && needFields?.length === 1) ? needFields[0] : needFields
-            );
-
-            errors = {...errors, ...validator.errors};
+        let errors = fields.filter((field: IMarkField) => {
+            const schemaField = Mark.field(field.code);
+            return !schemaField || !schemaField.activeRsl;
+        }).map(invalidField => {
+            return `Поле ${invalidField.code} не используется в библиотеке.`;
         });
 
-        return Mark.formatErrors(errors);
+        fields = fields.filter((field: IMarkField) => {
+            const schemaField = Mark.field(field.code);
+            return !!schemaField && schemaField.activeRsl;
+        });
+
+        errors = errors.concat(MarkValidator.validate(fields).getErrors());
+
+        return errors;
     }
 
     private static isExistsField(code: string): boolean {

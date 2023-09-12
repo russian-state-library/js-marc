@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -21,7 +10,6 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MarkValidator = exports.Schema = exports.Mark = void 0;
-var field_mark_1 = require("./field.mark");
 var schema_1 = require("./schema");
 Object.defineProperty(exports, "Schema", { enumerable: true, get: function () { return schema_1.Schema; } });
 var neck_validator_1 = require("neck-validator");
@@ -39,29 +27,25 @@ var Mark = /** @class */ (function () {
     Mark.getRepeatableFields = function () {
         return Mark.fields().filter(function (field) { return field.isRepeatable; });
     };
+    Mark.getActiveRslFields = function () {
+        return Mark.fields().filter(function (field) { return field.activeRsl; });
+    };
     Mark.field = function (code) {
         return schema_1.Schema.field(code);
     };
     Mark.validate = function (fields) {
-        var validationFields = Mark.getRequiredFields();
-        var validationData = [];
-        var errors = {};
-        for (var i = 0, length_1 = fields.length; i < length_1; ++i) {
-            if (Mark.isExistsField(fields[i].code)) {
-                var markField = Mark.field(fields[i].code);
-                if (!validationFields.includes(markField))
-                    validationFields.push(markField);
-                validationData.push(new field_mark_1.MarkField(fields[i].code, fields[i].ind1, fields[i].ind2, fields[i].subfields, fields[i].value));
-            }
-        }
-        validationFields.forEach(function (validationField) {
-            var needFields = validationData.filter(function (field) { return field.code === validationField.code; }).map(function (field) { return field.toValidatorStructure(); });
-            if (needFields.length === 0)
-                needFields = undefined;
-            var validator = validationField.isValid((!validationField.isRepeatable && (needFields === null || needFields === void 0 ? void 0 : needFields.length) === 1) ? needFields[0] : needFields);
-            errors = __assign(__assign({}, errors), validator.errors);
+        var errors = fields.filter(function (field) {
+            var schemaField = Mark.field(field.code);
+            return !schemaField || !schemaField.activeRsl;
+        }).map(function (invalidField) {
+            return "\u041F\u043E\u043B\u0435 ".concat(invalidField.code, " \u043D\u0435 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0432 \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0435.");
         });
-        return Mark.formatErrors(errors);
+        fields = fields.filter(function (field) {
+            var schemaField = Mark.field(field.code);
+            return !!schemaField && schemaField.activeRsl;
+        });
+        errors = errors.concat(validator_1.Validator.validate(fields).getErrors());
+        return errors;
     };
     Mark.isExistsField = function (code) {
         return !!Mark.field(code);
@@ -73,7 +57,7 @@ var Mark = /** @class */ (function () {
             for (var _i = 2; _i < arguments.length; _i++) {
                 args[_i - 2] = arguments[_i];
             }
-            for (var i = 0, length_2 = rules.length; i < length_2; ++i) {
+            for (var i = 0, length_1 = rules.length; i < length_1; ++i) {
                 response.push(schema_1.Schema.getRuleLocalization.apply(schema_1.Schema, __spreadArray(["".concat(rules[i].rule, "_").concat(type)], args, false)).trim());
             }
         };

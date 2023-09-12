@@ -64,14 +64,14 @@ var Schema = /** @class */ (function () {
         return util_1.format.apply(void 0, __spreadArray([Schema.instance().localization[rule]], args, false));
     };
     Schema.prototype.encoder = function (field) {
-        var _a;
-        var iField = new field_schema_1.Field(field.code, field.required, field.repeatable);
+        var _a, _b;
+        var iField = new field_schema_1.Field(field.code, field.required, field.repeatable, (_a = field.active_rsl) !== null && _a !== void 0 ? _a : false);
         ['ind1', 'ind2'].forEach(function (ind) {
             if (!!field[ind]) {
                 iField.indicators.push(new indicator_schema_1.Indicator(ind, field.ind1.codes.map(function (code) { return code.code; })));
             }
         });
-        ((_a = field.subfields) !== null && _a !== void 0 ? _a : [])
+        ((_b = field.subfields) !== null && _b !== void 0 ? _b : [])
             .forEach(function (subfield) { return iField.subfields.push(new subfield_schema_1.Subfield(subfield.code, subfield.required, subfield.repeatable)); });
         return iField;
     };
