@@ -287,7 +287,22 @@ export class Validator {
         for (const validatorsKey in validators) {
             const value = field[validatorsKey];
 
-            const rules = validators[validatorsKey].split('|');
+            const rules = [];
+
+            let prevIndex = 0;
+
+            for (let sIndex = 0, sLength = validators[validatorsKey].length; sIndex < sLength; ++sIndex) {
+                const currentSymbol = validators[validatorsKey][sIndex];
+                const nextSymbol = validators[validatorsKey][sIndex + 1];
+
+                if (currentSymbol === '|' && (nextSymbol !== '|' && !!nextSymbol)) {
+                    rules.push(validators[validatorsKey].substring(prevIndex, sIndex));
+                    prevIndex = sIndex + 1;
+                }
+            }
+
+            rules.push(validators[validatorsKey].substring(prevIndex));
+
 
             for (let index = 0, length = rules.length; index < length; ++index) {
                 let [ method, args ] = rules[index].split(':');

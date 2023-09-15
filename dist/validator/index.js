@@ -210,7 +210,17 @@ var Validator = /** @class */ (function () {
         var validators = Validator.instance.validators[validatorIndex];
         for (var validatorsKey in validators) {
             var value = field[validatorsKey];
-            var rules = validators[validatorsKey].split('|');
+            var rules = [];
+            var prevIndex = 0;
+            for (var sIndex = 0, sLength = validators[validatorsKey].length; sIndex < sLength; ++sIndex) {
+                var currentSymbol = validators[validatorsKey][sIndex];
+                var nextSymbol = validators[validatorsKey][sIndex + 1];
+                if (currentSymbol === '|' && (nextSymbol !== '|' && !!nextSymbol)) {
+                    rules.push(validators[validatorsKey].substring(prevIndex, sIndex));
+                    prevIndex = sIndex + 1;
+                }
+            }
+            rules.push(validators[validatorsKey].substring(prevIndex));
             for (var index = 0, length_1 = rules.length; index < length_1; ++index) {
                 var _a = rules[index].split(':'), method = _a[0], args = _a[1];
                 args = args === null || args === void 0 ? void 0 : args.split(',');
