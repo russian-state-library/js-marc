@@ -2,6 +2,16 @@ import {readFileSync} from "fs";
 import {IMarkField} from "../interfaces";
 import {MarkField} from "../field.mark";
 
+interface iSchema {
+    '$schema': string,
+    validators: {
+        condition: object,
+        validator: object,
+        messages: object
+    }[],
+    required: object[]
+};
+
 export class Validator {
 
     private static instance: Validator;
@@ -20,24 +30,24 @@ export class Validator {
 
     private currentField: object = null;
 
-    static loadCustomRulesFromSchema(path: string): Validator {
+    static loadCustomRulesFromSchema(schema: string|iSchema): Validator {
         const classValidator = new Validator();
 
         classValidator.rules = [];
         classValidator.validators = [];
         classValidator.messages = [];
 
-        const schema: {
-            '$schema': string,
-            validators: {
-                condition: object
-            }[],
-            required: object[]
-        } = JSON.parse(readFileSync(path, { encoding: 'utf-8' }));
+        let loadedSchema: iSchema;
 
-        classValidator.alwaysRequired = schema.required ?? [];
+        if (typeof schema === 'string') {
+            loadedSchema = JSON.parse(readFileSync(<string>schema, { encoding: 'utf-8' }));
+        } else {
+            loadedSchema = <iSchema>schema;
+        }
 
-        schema.validators.forEach((validator: { condition: object, validator: object, messages?: object }) => {
+        classValidator.alwaysRequired = loadedSchema.required ?? [];
+
+        loadedSchema.validators.forEach((validator: { condition: object, validator: object, messages?: object }) => {
             classValidator.rules.push(this.parseConditionFromSchema(validator.condition));
             classValidator.validators.push(validator.validator);
             classValidator.messages.push(validator.messages);
@@ -87,6 +97,7 @@ export class Validator {
         const fields = <IMarkField[]>args.slice(-1)[0];
 
         const relationField = fields.filter((f) => f.code === code)[0];
+        console.log(relationField)
 
         if (!relationField || !relationField['6']) return false;
 
@@ -129,6 +140,14 @@ export class Validator {
         return value !== undefined;
     }
 
+    static notRequired(value: any): boolean {
+        return typeof value === 'undefined';
+    }
+
+    static notEmpty(value: any): boolean {
+        return (value.length ?? 0) > 0;
+    }
+
     static substringEquals(value: string, ...params: any) {
         if (typeof params[params.length - 1] === 'object') {
             params = params.slice(0, -1)
@@ -141,6 +160,20 @@ export class Validator {
         const stop = params[1];
 
         return params.slice(2).includes((value ?? '').slice(+start - 1, +stop - 1));
+    }
+
+    static substringNotEquals(value: string, ...params: any) {
+        if (typeof params[params.length - 1] === 'object') {
+            params = params.slice(0, -1)
+        } else {
+            params = params[0].split(',');
+        }
+
+        const start = params[0];
+
+        const stop = params[1];
+
+        return !params.slice(2).includes((value ?? '').slice(+start - 1, +stop - 1));
     }
 
     static substringEqualsFieldSubfield(

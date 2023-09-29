@@ -1,0 +1,692 @@
+{
+  "$schema": "http://marc21.rsl.ru/",
+  "validators": [
+    {
+      "condition": {
+        "code": {
+          "whereNotIn": ["001", "002", "003", "005", "006", "007", "008", "260", "541", "856", "952", "534", "760", "762", "765", "767", "770", "772", "773", "774", "775", "776", "777", "780", "787", "505"]
+        }
+      },
+      "validator": {
+        "a": "required"
+      },
+      "messages": {
+        "a": "Не передано подполе $a для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "017"
+      },
+      "validator": {
+        "b": "required"
+      },
+      "messages": {
+        "b": "Не передано подполе $b для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "024",
+        "ind1": "7"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано обязательное подполе $2 для поля %code% со значением первого индикатора - 7."
+      }
+    },
+    {
+      "condition": {
+        "code": "040"
+      },
+      "validator": {
+        "a": "required",
+        "b": "required",
+        "e": "required"
+      },
+      "messages": {
+        "a": "Не передано подполе $a для поля %code%.",
+        "b": "Не передано подполе $b для поля %code%.",
+        "e": "Не передано подполе $e для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "040",
+        "a": {
+          "notEquals": "RuMoRGB"
+        }
+      },
+      "validator": {
+        "d": "required"
+      },
+      "messages": {
+        "d": "Не передано подполе $d для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "041"
+      },
+      "validator": {
+        "ind1": "required"
+      },
+      "messages": {
+        "ind1": "Не передан первый индикатор для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "041",
+        "ind1": "1"
+      },
+      "validator": {
+        "h": "required"
+      },
+      "messages": {
+        "h": "Не передано подполе $h для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "041",
+        "ind2": "7"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "044",
+        "b": {
+          "required": true
+        }
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "072",
+        "ind2": "7"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "084"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "086",
+        "ind1": "#"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "260"
+      },
+      "validator": {
+        "c": "required"
+      },
+      "messages": {
+        "c": "Не передано обязательное подполе $c для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": {
+          "whereIn": ["100", "110", "111", "130", "490", "600", "610", "611", "630", "653", "700", "710", "711", "730"]
+        }
+      },
+      "validator": {
+        "ind1": "required"
+      },
+      "messages": {
+        "ind1": "Не передан первый индикатор для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": {
+          "whereIn": ["210", "242", "245", "246", "247"]
+        }
+      },
+      "validator": {
+        "ind1": "required",
+        "ind2": "required"
+      },
+      "messages": {
+        "ind1": "Не передан первый индикатор для поля %code%.",
+        "ind2": "Не передан второй индикатор для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "505",
+        "ind2": "0"
+      },
+      "validator": {
+        "g": "required",
+        "r": "required",
+        "t": "required"
+      },
+      "messages": {
+        "g": "Не передано подполе $g для поля %code%.",
+        "r": "Не передано подполе $r для поля %code%.",
+        "t": "Не передано подполе $t для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "510",
+        "ind1": "4"
+      },
+      "validator": {
+        "c": "required"
+      },
+      "messages": {
+        "c": "Не передано подполе $c для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "600",
+        "ind2": "7"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "610",
+        "ind2": "7"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "611",
+        "ind2": "7"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "630",
+        "ind2": "7"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "648",
+        "ind2": "7"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "650"
+      },
+      "validator": {
+        "ind2": "required"
+      },
+      "messages": {
+        "ind2": "Не переданв второй индикатор для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "650",
+        "ind2": "7"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "651",
+        "ind2": "7"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "852",
+        "ind1": "4"
+      },
+      "validator": {
+        "j": "required"
+      },
+      "messages": {
+        "j": "Не передано подполе $j для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "852",
+        "ind1": "5"
+      },
+      "validator": {
+        "i": "required"
+      },
+      "messages": {
+        "i": "Не передано подполе $i для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "856"
+      },
+      "validator": {
+        "ind1": "required",
+        "ind2": "required",
+        "q": "required",
+        "u": "required",
+        "y": "required"
+      },
+      "messages": {
+        "ind1": "Не передан первый индикатор для поля %code%.",
+        "ind2": "Не передан второй индикатор для поля %code%.",
+        "q": "Не передано подполе $q для поля %code%.",
+        "u": "Не передано подполе $u для поля %code%.",
+        "y": "Не передано подполе $y для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "856",
+        "ind1": "7"
+      },
+      "validator": {
+        "2": "required"
+      },
+      "messages": {
+        "2": "Не передано подполе $2 для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "910"
+      },
+      "validator": {
+        "a": "required",
+        "b": "required"
+      },
+      "messages": {
+        "a": "Не передано подполе $a для поля %code%.",
+        "b": "Не передано подполе $b для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "911"
+      },
+      "validator": {
+        "a": "required",
+        "b": "required",
+        "c": "required"
+      },
+      "messages": {
+        "a": "Не передано подполе $a для поля %code%.",
+        "b": "Не передано подполе $b для поля %code%.",
+        "c": "Не передано подполе $с для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "952"
+      },
+      "validator": {
+        "h": "required|notEmpty"
+      },
+      "messages": {
+        "h": "Подполе $h для поля %code% долно быть заполнено."
+      }
+    },
+    {
+      "condition": {
+        "code": "977"
+      },
+      "validator": {
+        "a": "required",
+        "b": "required"
+      },
+      "messages": {
+        "a": "Не передано подполе $a для поля %code%.",
+        "b": "Не передано подполе $b для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "978"
+      },
+      "validator": {
+        "a": "required",
+        "b": "required"
+      },
+      "messages": {
+        "a": "Не передано подполе $a для поля %code%.",
+        "b": "Не передано подполе $b для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "979"
+      },
+      "validator": {
+        "a": "required",
+        "b": "required",
+        "c": "required"
+      },
+      "messages": {
+        "a": "Не передано подполе $a для поля %code%.",
+        "b": "Не передано подполе $b для поля %code%.",
+        "c": "Не передано подполе $c для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "979"
+      },
+      "validator": {
+        "a": "required",
+        "b": "required",
+        "c": "required"
+      },
+      "messages": {
+        "a": "Не передано подполе $a для поля %code%.",
+        "b": "Не передано подполе $b для поля %code%.",
+        "c": "Не передано подполе $c для поля %code%."
+      }
+    },
+    {
+      "condition": {
+        "code": "008",
+        "value": {
+          "substringNotEquals": "16,19,|||,###"
+        }
+      },
+      "validator": {
+        "value": "substringEqualsFieldSubfield:16,17,code,044,a"
+      },
+      "messages": {
+        "value": "Подстрока с 15 по 16 символ в поле 008 не соответствет значению подполя $a поля 044."
+      }
+    },
+    {
+      "condition": {
+        "code": "008",
+        "value": {
+          "substringNotEquals": "36,39,|||,###"
+        }
+      },
+      "validator": {
+        "value": "substringEqualsFieldSubfield:36,38,code,041,a"
+      },
+      "messages": {
+        "value": "Подстрока с 35 по 37 символ в поле 008 не соответствет значению подполя $a поля 041."
+      }
+    },
+    {
+      "condition": {
+        "code": "008",
+        "value": {
+          "substringEquals": "7,8,b"
+        }
+      },
+      "validator": {
+        "value": "substringEquals:7,11,####"
+      },
+      "messages": {
+        "value": "При использовании символов b в позиции 008/06, значения в позиции 008/07-10 заполняются символом пробела (#)."
+      }
+    },
+    {
+      "condition": {
+        "code": "008",
+        "value": {
+          "substringEquals": "7,8,|"
+        }
+      },
+      "validator": {
+        "value": "substringEquals:7,11,||||"
+      },
+      "messages": {
+        "value": "При использовании символов | в позиции 008/06, значения в позиции 008/07-10 заполняются символом |."
+      }
+    },
+    {
+      "condition": {
+        "code": "008",
+        "value": {
+          "substringEquals": "7,8,n"
+        }
+      },
+      "validator": {
+        "value": "substringEquals:7,11,uuuu"
+      },
+      "messages": {
+        "value": "При использовании символов n в позиции 008/06, значения в позиции 008/07-10 заполняются символом u."
+      }
+    },
+    {
+      "condition": {
+        "code": "008",
+        "value": {
+          "substringEquals": "7,8,b,s"
+        }
+      },
+      "validator": {
+        "value": "substringEquals:12,16,####"
+      },
+      "messages": {
+        "value": "При использовании символов | в позиции 008/06, значения в позиции 008/11-14 заполняются символом #."
+      }
+    },
+    {
+      "condition": {
+        "code": "008",
+        "value": {
+          "substringEquals": "7,8,|"
+        }
+      },
+      "validator": {
+        "value": "substringEquals:12,16,||||"
+      },
+      "messages": {
+        "value": "При использовании символов | в позиции 008/06, значения в позиции 008/11-14 заполняются символом |."
+      }
+    },
+    {
+      "condition": {
+        "code": "008",
+        "value": {
+          "substringEquals": "7,8,n,u"
+        }
+      },
+      "validator": {
+        "value": "substringEquals:12,16,uuuu"
+      },
+      "messages": {
+        "value": "При использовании символов n, u в позиции 008/06, значения в позиции 008/11-14 заполняются символом u."
+      }
+    },
+    {
+      "condition": {
+        "code": "008",
+        "value": {
+          "substringEquals": "7,8,c"
+        }
+      },
+      "validator": {
+        "value": "substringEquals:12,16,9999"
+      },
+      "messages": {
+        "value": "При использовании символов c в позиции 008/06, значения в позиции 008/11-14 заполняются символом 9999."
+      }
+    },
+    {
+      "condition": {
+        "code": "008",
+        "value": {
+          "substringEquals": "7,8,d,e,i,k,m,p,q,r,t"
+        }
+      },
+      "validator": {
+        "value": "substringEqualsRegex:12,16,^[\\du]{4}$"
+      },
+      "messages": {
+        "value": "При использовании символов d, e, i, k, m, p, q, r, t в позиции 008/06, значения в позиции 008/11-14 заполняются символом u и/или цифрами от 0 до 9."
+      }
+    },
+    {
+      "condition": {
+        "code": "008",
+        "value": {
+          "substringEquals": "7,8,c,d,e,i,k,m,p,q,r,s,t,u"
+        }
+      },
+      "validator": {
+        "value": "substringEqualsRegex:12,16,^[\\du]{4}$"
+      },
+      "messages": {
+        "value": "При использовании символов c, d, e, i, k, m, p, q, r, s, t, u в позиции 008/06, значения в позиции 008/07-10 заполняются символом u и/или цифрами от 0 до 9."
+      }
+    },
+    {
+      "condition": {
+        "6": {
+          "required": true
+        }
+      },
+      "validator": {
+        "6": "relations:false,false"
+      },
+      "messages": {
+        "6": "Значение подполя $6 поля %code% не соответствует значению ссылки в подполе $6 указанного поля."
+      }
+    },
+    {
+      "condition": {
+        "code": "880",
+        "6": {
+          "required": true
+        }
+      },
+      "validator": {
+        "6": "relations:true,false"
+      },
+      "messages": {
+        "6": "Значение индикаторов в поле 880 не соответствуют значениям индикаторов поля указанного в подполе $6"
+      }
+    },
+    {
+      "condition": {
+        "code": "880",
+        "6": {
+          "required": true
+        }
+      },
+      "validator": {
+        "6": "relations:false,true"
+      },
+      "messages": {
+        "6": "В указанном ссылочном поле в подполе $6 отсутствуют подполя из поля %code%"
+      }
+    },
+    {
+      "condition": {
+        "code": "505",
+        "or": {
+          "t": {
+            "notRequired": true
+          },
+          "r": {
+            "notRequired": true
+          }
+        }
+      },
+      "validator": {
+        "a": "required"
+      },
+      "messages": {
+        "a": "Не заполнено подполе $a для поля 505. Подполе $a для поля 505 необязтаельно к заполнению, если используются подполя $t и $r."
+      }
+    }
+  ],
+  "required": [
+    {
+      "code": "003"
+    },
+    {
+      "code": "008"
+    },
+    {
+      "code": "245",
+      "subfields": ["a"]
+    }
+  ]
+}

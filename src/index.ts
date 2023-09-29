@@ -43,7 +43,7 @@ class Mark {
 
         errors = errors.concat(MarkValidator.validate(fields).getErrors());
 
-        return errors;
+        return [...new Set(errors)];
     }
 
     private static isExistsField(code: string): boolean {
