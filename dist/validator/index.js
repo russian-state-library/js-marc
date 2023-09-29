@@ -1,75 +1,72 @@
 "use strict";
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Validator = void 0;
-var fs_1 = require("fs");
-var field_mark_1 = require("../field.mark");
-var Validator = /** @class */ (function () {
-    function Validator() {
-        this.errors = [];
-        this.currentField = null;
-    }
-    Validator.loadCustomRulesFromSchema = function (path) {
-        var _this = this;
-        var _a;
-        var classValidator = new Validator();
+const fs_1 = require("fs");
+const field_mark_1 = require("../field.mark");
+;
+class Validator {
+    static instance;
+    rules;
+    validators;
+    alwaysRequired;
+    messages;
+    fields;
+    errors = [];
+    currentField = null;
+    static loadCustomRulesFromSchema(schema) {
+        const classValidator = new Validator();
         classValidator.rules = [];
         classValidator.validators = [];
         classValidator.messages = [];
-        var schema = JSON.parse((0, fs_1.readFileSync)(path, { encoding: 'utf-8' }));
-        classValidator.alwaysRequired = (_a = schema.required) !== null && _a !== void 0 ? _a : [];
-        schema.validators.forEach(function (validator) {
-            classValidator.rules.push(_this.parseConditionFromSchema(validator.condition));
+        let loadedSchema;
+        if (typeof schema === 'string') {
+            loadedSchema = JSON.parse((0, fs_1.readFileSync)(schema, { encoding: 'utf-8' }));
+        }
+        else {
+            loadedSchema = schema;
+        }
+        classValidator.alwaysRequired = loadedSchema.required ?? [];
+        loadedSchema.validators.forEach((validator) => {
+            classValidator.rules.push(this.parseConditionFromSchema(validator.condition));
             classValidator.validators.push(validator.validator);
             classValidator.messages.push(validator.messages);
         });
         return Validator.instance = classValidator;
-    };
-    Validator.validate = function (fields) {
-        var classValidator = new Validator();
-        classValidator.fields = fields.map(function (field) { return ((new field_mark_1.MarkField(field.code, field.ind1, field.ind2, field.subfields, field.value)).toValidatorStructure()); });
+    }
+    static validate(fields) {
+        const classValidator = new Validator();
+        classValidator.fields = fields.map(field => ((new field_mark_1.MarkField(field.code, field.ind1, field.ind2, field.subfields, field.value)).toValidatorStructure()));
         classValidator.validate(JSON.parse(JSON.stringify(Validator.instance.rules)));
         return classValidator;
-    };
-    Validator.equals = function (val1, val2) {
+    }
+    static equals(val1, val2) {
         return val1 === val2;
-    };
-    Validator.notEquals = function (val1, val2) {
+    }
+    static notEquals(val1, val2) {
         return val1 !== val2;
-    };
-    Validator.whereNotIn = function (value, list) {
+    }
+    static whereNotIn(value, list) {
         return !list.includes(value);
-    };
-    Validator.whereIn = function (value, list) {
+    }
+    static whereIn(value, list) {
         return list.includes(value);
-    };
-    Validator.substringEqualsRegex = function (value, start, stop, regex) {
-        var regexp = new RegExp(regex);
+    }
+    static substringEqualsRegex(value, start, stop, regex) {
+        const regexp = new RegExp(regex);
         return regexp.test(value.slice(+start - 1, +stop - 1));
-    };
-    Validator.relations = function (value, equalsIndicators, equalsSubfields) {
-        var args = [];
-        for (var _i = 3; _i < arguments.length; _i++) {
-            args[_i - 3] = arguments[_i];
-        }
-        var code = value.slice(0, 3);
-        var index = value.slice(4, 6);
-        var fields = args.slice(-1)[0];
-        var relationField = fields.filter(function (f) { return f.code === code; })[0];
+    }
+    static relations(value, equalsIndicators, equalsSubfields, ...args) {
+        const code = value.slice(0, 3);
+        const index = value.slice(4, 6);
+        const fields = args.slice(-1)[0];
+        const relationField = fields.filter((f) => f.code === code)[0];
+        console.log(relationField);
         if (!relationField || !relationField['6'])
             return false;
-        var currentField = Validator.instance.currentField;
+        const currentField = Validator.instance.currentField;
         if (equalsSubfields === 'false' && equalsIndicators === 'false') {
-            var relationFieldCode = relationField['6'].slice(0, 3);
-            var relationFieldIndex = relationField['6'].slice(4, 6);
+            const relationFieldCode = relationField['6'].slice(0, 3);
+            const relationFieldIndex = relationField['6'].slice(4, 6);
             //@ts-ignore
             if (currentField.code !== relationFieldCode || index !== relationFieldIndex)
                 return false;
@@ -82,36 +79,49 @@ var Validator = /** @class */ (function () {
                 relationField.ind2 !== currentField.ind2))
             return false;
         if (equalsSubfields === 'true') {
-            var subfields = Object.keys(currentField).filter(function (key) { return !['code', 'ind1', 'ind2'].includes(key); });
-            for (var i = 0; i < subfields.length; ++i) {
+            const subfields = Object.keys(currentField).filter(key => !['code', 'ind1', 'ind2'].includes(key));
+            for (let i = 0; i < subfields.length; ++i) {
                 if (!(subfields[i] in relationField)) {
                     return false;
                 }
             }
         }
         return true;
-    };
-    Validator.required = function (value) {
+    }
+    static required(value) {
         return value !== undefined;
-    };
-    Validator.substringEquals = function (value) {
-        var params = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            params[_i - 1] = arguments[_i];
-        }
+    }
+    static notRequired(value) {
+        return typeof value === 'undefined';
+    }
+    static notEmpty(value) {
+        return (value.length ?? 0) > 0;
+    }
+    static substringEquals(value, ...params) {
         if (typeof params[params.length - 1] === 'object') {
             params = params.slice(0, -1);
         }
         else {
             params = params[0].split(',');
         }
-        var start = params[0];
-        var stop = params[1];
-        return params.slice(2).includes((value !== null && value !== void 0 ? value : '').slice(+start - 1, +stop - 1));
-    };
-    Validator.substringEqualsFieldSubfield = function (value, start, stop, filterFieldIndicator, filterFieldValue, subfieldKey, fields) {
-        var substring = (value !== null && value !== void 0 ? value : '').substring(start - 1, stop);
-        var filteredFields = fields.filter(function (field) { return field[filterFieldIndicator] === filterFieldValue; });
+        const start = params[0];
+        const stop = params[1];
+        return params.slice(2).includes((value ?? '').slice(+start - 1, +stop - 1));
+    }
+    static substringNotEquals(value, ...params) {
+        if (typeof params[params.length - 1] === 'object') {
+            params = params.slice(0, -1);
+        }
+        else {
+            params = params[0].split(',');
+        }
+        const start = params[0];
+        const stop = params[1];
+        return !params.slice(2).includes((value ?? '').slice(+start - 1, +stop - 1));
+    }
+    static substringEqualsFieldSubfield(value, start, stop, filterFieldIndicator, filterFieldValue, subfieldKey, fields) {
+        const substring = (value ?? '').substring(start - 1, stop);
+        const filteredFields = fields.filter(field => field[filterFieldIndicator] === filterFieldValue);
         if (filteredFields.length === 0)
             return false;
         if (!(subfieldKey in filteredFields[0]))
@@ -119,17 +129,15 @@ var Validator = /** @class */ (function () {
         return (Array.isArray(filteredFields[0][subfieldKey]))
             ? filteredFields[0][subfieldKey][0] === substring
             : filteredFields[0][subfieldKey] === substring;
-    };
-    Validator.parseConditionFromSchema = function (condition, type, dataField) {
-        if (type === void 0) { type = 'and'; }
-        if (dataField === void 0) { dataField = null; }
-        var conditions = { type: type, conditions: [] };
-        for (var conditionKey in condition) {
+    }
+    static parseConditionFromSchema(condition, type = 'and', dataField = null) {
+        const conditions = { type, conditions: [] };
+        for (const conditionKey in condition) {
             if (['and', 'or'].includes(conditionKey.toLowerCase())) {
                 conditions.conditions.push(this.parseConditionFromSchema(condition[conditionKey], conditionKey.toLowerCase(), dataField));
                 continue;
             }
-            var conditionType = typeof condition[conditionKey];
+            const conditionType = typeof condition[conditionKey];
             if (conditionType === 'object' && !Array.isArray(condition[conditionKey])) {
                 conditions.conditions.push(this.parseConditionFromSchema(condition[conditionKey], type, conditionKey));
                 continue;
@@ -141,36 +149,35 @@ var Validator = /** @class */ (function () {
             });
         }
         return conditions;
-    };
-    Validator.prototype.isError = function () {
+    }
+    isError() {
         return this.errors.length > 0;
-    };
-    Validator.prototype.getErrors = function () {
+    }
+    getErrors() {
         return this.errors;
-    };
-    Validator.prototype.validate = function (rules) {
-        var _this = this;
-        rules.forEach(function (rule, index) {
-            var fields = _this.findCondition(rule, _this.fields);
-            fields.filter(function (field) {
+    }
+    validate(rules) {
+        rules.forEach((rule, index) => {
+            const fields = this.findCondition(rule, this.fields);
+            fields.filter(field => {
                 Validator.instance.currentField = field;
-                var isValid = !_this.isValidField(field, index);
+                const isValid = !this.isValidField(field, index);
                 Validator.instance.currentField = null;
                 return isValid;
             });
         });
-        var alwaysRequired = Validator.instance.alwaysRequired;
-        alwaysRequired.forEach(function (alwaysRequiredRule) {
-            var fields = _this.fields.filter(function (field) {
-                var isValid = Object.keys(alwaysRequiredRule).map(function (rule) {
+        const alwaysRequired = Validator.instance.alwaysRequired;
+        alwaysRequired.forEach(alwaysRequiredRule => {
+            const fields = this.fields.filter(field => {
+                const isValid = Object.keys(alwaysRequiredRule).map(rule => {
                     if (rule === 'subfields')
-                        return !alwaysRequiredRule['subfields'].map(function (subfield) { return field[subfield] !== undefined; }).includes(false);
+                        return !alwaysRequiredRule['subfields'].map(subfield => field[subfield] !== undefined).includes(false);
                     return field[rule] === alwaysRequiredRule[rule];
                 });
                 return !isValid.includes(false);
             });
             if (fields.length === 0) {
-                var message = "\u041D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043D\u043E \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u043F\u043E\u043B\u0435 ".concat(alwaysRequiredRule['code']);
+                let message = `Не передано обязательное поле ${alwaysRequiredRule['code']}`;
                 if ('ind1' in alwaysRequiredRule) {
                     message += ', первый индикатор';
                 }
@@ -178,65 +185,63 @@ var Validator = /** @class */ (function () {
                     message += ', второй индикатор';
                 }
                 if ('subfields' in alwaysRequiredRule) {
-                    message += ', подполя: ' + alwaysRequiredRule['subfields'].map(function (subfield) { return "$".concat(subfield); });
+                    message += ', подполя: ' + alwaysRequiredRule['subfields'].map(subfield => `$${subfield}`);
                 }
-                _this.errors.push(message);
+                this.errors.push(message);
             }
         });
-    };
-    Validator.prototype.findCondition = function (condition, fields) {
-        var _this = this;
-        var type = condition.type;
-        var copyFields = Array.from(fields);
-        condition.conditions.forEach(function (cond, index) {
+    }
+    findCondition(condition, fields) {
+        const type = condition.type;
+        let copyFields = Array.from(fields);
+        condition.conditions.forEach((cond, index) => {
             if (typeof cond === 'object' && 'conditions' in cond) {
-                copyFields = _this.findCondition(cond, copyFields);
+                copyFields = this.findCondition(cond, copyFields);
                 condition.conditions[index] = copyFields.length > 0;
             }
         });
-        copyFields = copyFields.filter(function (copyField) {
-            var validationList = condition.conditions.map(function (condition) {
+        copyFields = copyFields.filter(copyField => {
+            const validationList = condition.conditions.map(condition => {
                 return (typeof condition === "boolean")
                     ? condition
                     : Validator[condition.method](copyField[condition.dataField], condition.args);
             });
             return (type === 'and')
-                ? validationList.filter(function (validationResult) { return !validationResult; }).length === 0
+                ? validationList.filter(validationResult => !validationResult).length === 0
                 : validationList.includes(true);
         });
         return copyFields;
-    };
-    Validator.prototype.isValidField = function (field, validatorIndex) {
-        var validators = Validator.instance.validators[validatorIndex];
-        for (var validatorsKey in validators) {
-            var value = field[validatorsKey];
-            var rules = [];
-            var prevIndex = 0;
-            for (var sIndex = 0, sLength = validators[validatorsKey].length; sIndex < sLength; ++sIndex) {
-                var currentSymbol = validators[validatorsKey][sIndex];
-                var nextSymbol = validators[validatorsKey][sIndex + 1];
+    }
+    isValidField(field, validatorIndex) {
+        const validators = Validator.instance.validators[validatorIndex];
+        for (const validatorsKey in validators) {
+            const value = field[validatorsKey];
+            const rules = [];
+            let prevIndex = 0;
+            for (let sIndex = 0, sLength = validators[validatorsKey].length; sIndex < sLength; ++sIndex) {
+                const currentSymbol = validators[validatorsKey][sIndex];
+                const nextSymbol = validators[validatorsKey][sIndex + 1];
                 if (currentSymbol === '|' && (nextSymbol !== '|' && !!nextSymbol)) {
                     rules.push(validators[validatorsKey].substring(prevIndex, sIndex));
                     prevIndex = sIndex + 1;
                 }
             }
             rules.push(validators[validatorsKey].substring(prevIndex));
-            for (var index = 0, length_1 = rules.length; index < length_1; ++index) {
-                var _a = rules[index].split(':'), method = _a[0], args = _a[1];
-                args = args === null || args === void 0 ? void 0 : args.split(',');
-                if (!Validator[method].apply(Validator, __spreadArray(__spreadArray([value], (args !== null && args !== void 0 ? args : []), false), [this.fields], false))) {
+            for (let index = 0, length = rules.length; index < length; ++index) {
+                let [method, args] = rules[index].split(':');
+                args = args?.split(',');
+                if (!Validator[method](value, ...(args ?? []), this.fields)) {
                     this.errors.push(this.formatErrorMessage(Validator.instance.messages[validatorIndex][validatorsKey], field));
                 }
             }
         }
         return false;
-    };
-    Validator.prototype.formatErrorMessage = function (message, field) {
-        for (var fieldKey in field) {
-            message = message.replaceAll("%".concat(fieldKey, "%"), field[fieldKey]);
+    }
+    formatErrorMessage(message, field) {
+        for (const fieldKey in field) {
+            message = message.replaceAll(`%${fieldKey}%`, field[fieldKey]);
         }
         return message;
-    };
-    return Validator;
-}());
+    }
+}
 exports.Validator = Validator;

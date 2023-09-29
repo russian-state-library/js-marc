@@ -1,9 +1,9 @@
-import { Schema, MarkValidator, Mark } from '../src/index';
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const index_1 = require("../index");
 test('Обязательное подполе $a для полей кроме 260, 534, 541, 760,762,765,767,770,772,773,774,775,776,777,780, 856, 952', () => {
-    Schema.load('./tests/schema/schema.json');
-
-    MarkValidator.loadCustomRulesFromSchema({
+    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
             {
@@ -22,18 +22,13 @@ test('Обязательное подполе $a для полей кроме 26
         ],
         required: []
     });
-
-    expect(Mark.validate([{ code: '979' }])).toEqual( ["Не передано подполе $a для поля 979."]);
-
-    expect(Mark.validate([{ code: '979', subfields: [ { code: 'a', value: 'any' } ] }])).toEqual( []);
-
-    expect(Mark.validate([{ code: '260' }])).toEqual( []);
+    expect(index_1.Mark.validate([{ code: '979' }])).toEqual(["Не передано подполе $a для поля 979."]);
+    expect(index_1.Mark.validate([{ code: '979', subfields: [{ code: 'a', value: 'any' }] }])).toEqual([]);
+    expect(index_1.Mark.validate([{ code: '260' }])).toEqual([]);
 });
-
 test('505 t r', () => {
-    Schema.load('./tests/schema/schema.json');
-
-    MarkValidator.loadCustomRulesFromSchema({
+    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
             {
@@ -58,20 +53,14 @@ test('505 t r', () => {
         ],
         required: []
     });
-
-    expect(Mark.validate([{ code: '505' }])).toEqual( ["Не заполнено подполе $a для поля 505. Подполе $a для поля 505 необязтаельно к заполнению, если используются подполя $t и $r."]);
-
-    expect(Mark.validate([{ code: '505', subfields: [ { code: 't', value: 'any' } ] }])).toEqual( []);
-
-    expect(Mark.validate([{ code: '505', subfields: [ { code: 'r', value: 'any' } ] }])).toEqual( []);
-
-    expect(Mark.validate([{ code: '505', subfields: [ { code: 'r', value: 'any' }, { code: 't', value: 'any' } ] }])).toEqual( []);
+    expect(index_1.Mark.validate([{ code: '505' }])).toEqual(["Не заполнено подполе $a для поля 505. Подполе $a для поля 505 необязтаельно к заполнению, если используются подполя $t и $r."]);
+    expect(index_1.Mark.validate([{ code: '505', subfields: [{ code: 't', value: 'any' }] }])).toEqual([]);
+    expect(index_1.Mark.validate([{ code: '505', subfields: [{ code: 'r', value: 'any' }] }])).toEqual([]);
+    expect(index_1.Mark.validate([{ code: '505', subfields: [{ code: 'r', value: 'any' }, { code: 't', value: 'any' }] }])).toEqual([]);
 });
-
 test('Обязательное подполе $b для поля 017', () => {
-    Schema.load('./tests/schema/schema.json');
-
-    MarkValidator.loadCustomRulesFromSchema({
+    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
             {
@@ -88,16 +77,12 @@ test('Обязательное подполе $b для поля 017', () => {
         ],
         required: []
     });
-
-    expect(Mark.validate([{ code: '017' }])).toEqual( ["Не передано подполе $b для поля 017."]);
-
-    expect(Mark.validate([{ code: '017', subfields: [ { code: 'b', value: 'any' } ] }])).toEqual( []);
+    expect(index_1.Mark.validate([{ code: '017' }])).toEqual(["Не передано подполе $b для поля 017."]);
+    expect(index_1.Mark.validate([{ code: '017', subfields: [{ code: 'b', value: 'any' }] }])).toEqual([]);
 });
-
 test('Обязательное подполе $2 для поля 024 со значением в первом индикаторе 7', () => {
-    Schema.load('./tests/schema/schema.json');
-
-    MarkValidator.loadCustomRulesFromSchema({
+    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
             {
@@ -115,18 +100,13 @@ test('Обязательное подполе $2 для поля 024 со зна
         ],
         required: []
     });
-
-    expect(Mark.validate([{ code: '024', ind1: '1' }])).toEqual( []);
-
-    expect(Mark.validate([{ code: '024', ind1: '7' }])).toEqual( ['Не передано обязательное подполе $2 для поля 024 со значением первого индикатора - 7.']);
-
-    expect(Mark.validate([{ code: '024', ind1: '7', subfields: [ { code: '2', value: '2' } ] }])).toEqual( []);
+    expect(index_1.Mark.validate([{ code: '024', ind1: '1' }])).toEqual([]);
+    expect(index_1.Mark.validate([{ code: '024', ind1: '7' }])).toEqual(['Не передано обязательное подполе $2 для поля 024 со значением первого индикатора - 7.']);
+    expect(index_1.Mark.validate([{ code: '024', ind1: '7', subfields: [{ code: '2', value: '2' }] }])).toEqual([]);
 });
-
 test('Обязательное подполе $a, $b, $e для поля 040', () => {
-    Schema.load('./tests/schema/schema.json');
-
-    MarkValidator.loadCustomRulesFromSchema({
+    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
             {
@@ -147,29 +127,23 @@ test('Обязательное подполе $a, $b, $e для поля 040', (
         ],
         required: []
     });
-
-    expect(Mark.validate([{ code: '040' }])).toEqual( [
+    expect(index_1.Mark.validate([{ code: '040' }])).toEqual([
         'Не передано подполе $a для поля 040.',
         'Не передано подполе $b для поля 040.',
         'Не передано подполе $e для поля 040.'
     ]);
-
-    expect(Mark.validate([{ code: '040', subfields: [ { code: 'a', value: '1' } ] }])).toEqual( [
+    expect(index_1.Mark.validate([{ code: '040', subfields: [{ code: 'a', value: '1' }] }])).toEqual([
         'Не передано подполе $b для поля 040.',
         'Не передано подполе $e для поля 040.'
     ]);
-
-    expect(Mark.validate([{ code: '040', subfields: [ { code: 'a', value: '1' }, { code: 'b', value: '1' } ] }])).toEqual( [
+    expect(index_1.Mark.validate([{ code: '040', subfields: [{ code: 'a', value: '1' }, { code: 'b', value: '1' }] }])).toEqual([
         'Не передано подполе $e для поля 040.'
     ]);
-
-    expect(Mark.validate([{ code: '040', subfields: [ { code: 'a', value: '1' }, { code: 'b', value: '1' }, { code: 'e', value: '1' } ] }])).toEqual( []);
+    expect(index_1.Mark.validate([{ code: '040', subfields: [{ code: 'a', value: '1' }, { code: 'b', value: '1' }, { code: 'e', value: '1' }] }])).toEqual([]);
 });
-
 test('Обязательное подполе $d для поля 040, если в подполе $a указано не RuMoRGB.', () => {
-    Schema.load('./tests/schema/schema.json');
-
-    MarkValidator.loadCustomRulesFromSchema({
+    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
             {
@@ -189,16 +163,12 @@ test('Обязательное подполе $d для поля 040, если �
         ],
         required: []
     });
-
-    expect(Mark.validate([{ code: '040', subfields: [ { code: 'a', value: '1' } ] }])).toEqual( ["Не передано подполе $d для поля 040."]);
-
-    expect(Mark.validate([{ code: '040', subfields: [ { code: 'a', value: 'RuMoRGB' } ] }])).toEqual( []);
+    expect(index_1.Mark.validate([{ code: '040', subfields: [{ code: 'a', value: '1' }] }])).toEqual(["Не передано подполе $d для поля 040."]);
+    expect(index_1.Mark.validate([{ code: '040', subfields: [{ code: 'a', value: 'RuMoRGB' }] }])).toEqual([]);
 });
-
 test('Обязательный первый индикатор при использовании 041 поля.', () => {
-    Schema.load('./tests/schema/schema.json');
-
-    MarkValidator.loadCustomRulesFromSchema({
+    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
             {
@@ -215,16 +185,12 @@ test('Обязательный первый индикатор при испол
         ],
         required: []
     });
-
-    expect(Mark.validate([{ code: '041' }])).toEqual( ["Не передан первый индикатор для поля 041."]);
-
-    expect(Mark.validate([{ code: '041', ind1: '1' }])).toEqual( []);
+    expect(index_1.Mark.validate([{ code: '041' }])).toEqual(["Не передан первый индикатор для поля 041."]);
+    expect(index_1.Mark.validate([{ code: '041', ind1: '1' }])).toEqual([]);
 });
-
 test('Обязательный первый индикатор при использовании 210 поля.', () => {
-    Schema.load('./tests/schema/schema.json');
-
-    MarkValidator.loadCustomRulesFromSchema({
+    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
             {
@@ -241,16 +207,12 @@ test('Обязательный первый индикатор при испол
         ],
         required: []
     });
-
-    expect(Mark.validate([{ code: '041' }])).toEqual( ["Не передан первый индикатор для поля 041."]);
-
-    expect(Mark.validate([{ code: '041', ind1: '1' }])).toEqual( []);
+    expect(index_1.Mark.validate([{ code: '041' }])).toEqual(["Не передан первый индикатор для поля 041."]);
+    expect(index_1.Mark.validate([{ code: '041', ind1: '1' }])).toEqual([]);
 });
-
 test('Обязательный подполе $h для поля 041, если в позиции первого индикатора указано 1', () => {
-    Schema.load('./tests/schema/schema.json');
-
-    MarkValidator.loadCustomRulesFromSchema({
+    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
             {
@@ -268,20 +230,14 @@ test('Обязательный подполе $h для поля 041, если �
         ],
         required: []
     });
-
-    expect(Mark.validate([{ code: '041', ind1: '1' }])).toEqual( ["Не передано подполе $h для поля 041."]);
-
-    expect(Mark.validate([{ code: '041', ind1: '1', subfields: [{code: 'h', value: 'any'}] }])).toEqual( []);
-
-    expect(Mark.validate([{ code: '041', ind1: '2' }])).toEqual( []);
-
-    expect(Mark.validate([{ code: '041' }])).toEqual( []);
+    expect(index_1.Mark.validate([{ code: '041', ind1: '1' }])).toEqual(["Не передано подполе $h для поля 041."]);
+    expect(index_1.Mark.validate([{ code: '041', ind1: '1', subfields: [{ code: 'h', value: 'any' }] }])).toEqual([]);
+    expect(index_1.Mark.validate([{ code: '041', ind1: '2' }])).toEqual([]);
+    expect(index_1.Mark.validate([{ code: '041' }])).toEqual([]);
 });
-
 test('Обязательный подполе $2 для поля 041, если в позиции первого индикатора указано 7', () => {
-    Schema.load('./tests/schema/schema.json');
-
-    MarkValidator.loadCustomRulesFromSchema({
+    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
             {
@@ -299,20 +255,14 @@ test('Обязательный подполе $2 для поля 041, если �
         ],
         required: []
     });
-
-    expect(Mark.validate([{ code: '041', ind1: '7' }])).toEqual( ["Не передано подполе $2 для поля 041."]);
-
-    expect(Mark.validate([{ code: '041', ind1: '7', subfields: [{ code: '2', value: 'any' }] }])).toEqual( []);
-
-    expect(Mark.validate([{ code: '041', ind1: '7' }])).toEqual( []);
-
-    expect(Mark.validate([{ code: '041' }])).toEqual( []);
+    expect(index_1.Mark.validate([{ code: '041', ind1: '7' }])).toEqual(["Не передано подполе $2 для поля 041."]);
+    expect(index_1.Mark.validate([{ code: '041', ind1: '7', subfields: [{ code: '2', value: 'any' }] }])).toEqual([]);
+    expect(index_1.Mark.validate([{ code: '041', ind1: '7' }])).toEqual([]);
+    expect(index_1.Mark.validate([{ code: '041' }])).toEqual([]);
 });
-
 test('1 Обязательный подполе $2 для поля 041, если в позиции первого индикатора указано 7', () => {
-    Schema.load('./tests/schema/schema.json');
-
-    MarkValidator.loadCustomRulesFromSchema({
+    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
             {
@@ -332,6 +282,5 @@ test('1 Обязательный подполе $2 для поля 041, если
         ],
         required: []
     });
-
-    expect(Mark.validate([{ code: '008', value: '012345678901234|||890' }])).toEqual( []);
+    expect(index_1.Mark.validate([{ code: '008', value: '012345678901234|||890' }])).toEqual([]);
 });
