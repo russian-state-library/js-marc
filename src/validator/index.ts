@@ -137,11 +137,11 @@ export class Validator {
     }
 
     static required(value: any): boolean {
-        return value !== undefined;
+        return (!!value && !!value.length);
     }
 
     static notRequired(value: any): boolean {
-        return typeof value === 'undefined';
+        return (typeof value === 'undefined') || (!!value && !value.length);
     }
 
     static notEmpty(value: any): boolean {

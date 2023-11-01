@@ -89,10 +89,10 @@ class Validator {
         return true;
     }
     static required(value) {
-        return value !== undefined;
+        return (!!value && !!value.length);
     }
     static notRequired(value) {
-        return typeof value === 'undefined';
+        return (typeof value === 'undefined') || (!!value && !value.length);
     }
     static notEmpty(value) {
         return (value.length ?? 0) > 0;

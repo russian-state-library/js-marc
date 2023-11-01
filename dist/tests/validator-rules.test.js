@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../index");
 test('Обязательное подполе $a для полей кроме 260, 534, 541, 760,762,765,767,770,772,773,774,775,776,777,780, 856, 952', () => {
-    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.Schema.load('./src/tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -27,7 +27,7 @@ test('Обязательное подполе $a для полей кроме 26
     expect(index_1.Mark.validate([{ code: '260' }])).toEqual([]);
 });
 test('505 t r', () => {
-    index_1.Schema.load('./tests/schema/schema.json');
+    index_1.Schema.load('./src/tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -209,6 +209,30 @@ test('Обязательный первый индикатор при испол
     });
     expect(index_1.Mark.validate([{ code: '041' }])).toEqual(["Не передан первый индикатор для поля 041."]);
     expect(index_1.Mark.validate([{ code: '041', ind1: '1' }])).toEqual([]);
+});
+test('Обязательный первый индикатор при использовании 100 поля.', () => {
+    index_1.Schema.load('./src/tests/schema/schema.json');
+    index_1.MarkValidator.loadCustomRulesFromSchema({
+        $schema: '',
+        validators: [
+            {
+                "condition": {
+                    "code": {
+                        "whereIn": ["100", "110", "111", "130", "490", "600", "610", "611", "630", "653", "700", "710", "711", "730"]
+                    }
+                },
+                "validator": {
+                    "ind1": "required"
+                },
+                "messages": {
+                    "ind1": "Не передан первый индикатор для поля %code%."
+                }
+            },
+        ],
+        required: []
+    });
+    expect(index_1.Mark.validate([{ code: '100' }])).toEqual(["Не передан первый индикатор для поля 100."]);
+    expect(index_1.Mark.validate([{ code: '100', ind1: '1' }])).toEqual([]);
 });
 test('Обязательный подполе $h для поля 041, если в позиции первого индикатора указано 1', () => {
     index_1.Schema.load('./tests/schema/schema.json');
