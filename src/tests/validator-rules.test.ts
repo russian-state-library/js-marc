@@ -1,8 +1,12 @@
 import { Schema, MarkValidator, Mark } from '../index';
 
-test('Обязательное подполе $a для полей кроме 260, 534, 541, 760,762,765,767,770,772,773,774,775,776,777,780, 856, 952', () => {
-    Schema.load('./src/tests/schema/schema.json');
+Schema.load('./src/tests/schema/schema.json')
 
+test('008', () => {
+    MarkValidator.substringEquals("230829buuuu1234#######ru###########rus##", '12,16,^[\\du]{4}$')
+})
+
+test('Обязательное подполе $a для полей кроме 260, 534, 541, 760,762,765,767,770,772,773,774,775,776,777,780, 856, 952', () => {
     MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -31,8 +35,6 @@ test('Обязательное подполе $a для полей кроме 26
 });
 
 test('505 t r', () => {
-    Schema.load('./src/tests/schema/schema.json');
-
     MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -69,8 +71,6 @@ test('505 t r', () => {
 });
 
 test('Обязательное подполе $b для поля 017', () => {
-    Schema.load('./tests/schema/schema.json');
-
     MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -95,8 +95,6 @@ test('Обязательное подполе $b для поля 017', () => {
 });
 
 test('Обязательное подполе $2 для поля 024 со значением в первом индикаторе 7', () => {
-    Schema.load('./tests/schema/schema.json');
-
     MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -124,8 +122,6 @@ test('Обязательное подполе $2 для поля 024 со зна
 });
 
 test('Обязательное подполе $a, $b, $e для поля 040', () => {
-    Schema.load('./tests/schema/schema.json');
-
     MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -167,8 +163,6 @@ test('Обязательное подполе $a, $b, $e для поля 040', (
 });
 
 test('Обязательное подполе $d для поля 040, если в подполе $a указано не RuMoRGB.', () => {
-    Schema.load('./tests/schema/schema.json');
-
     MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -196,8 +190,6 @@ test('Обязательное подполе $d для поля 040, если �
 });
 
 test('Обязательный первый индикатор при использовании 041 поля.', () => {
-    Schema.load('./tests/schema/schema.json');
-
     MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -222,8 +214,6 @@ test('Обязательный первый индикатор при испол
 });
 
 test('Обязательный первый индикатор при использовании 210 поля.', () => {
-    Schema.load('./tests/schema/schema.json');
-
     MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -247,8 +237,6 @@ test('Обязательный первый индикатор при испол
     expect(Mark.validate([{ code: '041', ind1: '1' }])).toEqual( []);
 });
 test('Обязательный первый индикатор при использовании 100 поля.', () => {
-    Schema.load('./src/tests/schema/schema.json');
-
     MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -275,8 +263,6 @@ test('Обязательный первый индикатор при испол
 });
 
 test('Обязательный подполе $h для поля 041, если в позиции первого индикатора указано 1', () => {
-    Schema.load('./tests/schema/schema.json');
-
     MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -306,8 +292,6 @@ test('Обязательный подполе $h для поля 041, если �
 });
 
 test('Обязательный подполе $2 для поля 041, если в позиции первого индикатора указано 7', () => {
-    Schema.load('./tests/schema/schema.json');
-
     MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -337,8 +321,6 @@ test('Обязательный подполе $2 для поля 041, если �
 });
 
 test('1 Обязательный подполе $2 для поля 041, если в позиции первого индикатора указано 7', () => {
-    Schema.load('./tests/schema/schema.json');
-
     MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [

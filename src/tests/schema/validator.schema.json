@@ -498,7 +498,7 @@
         }
       },
       "validator": {
-        "value": "substringEquals:7,11,####"
+        "value": "substringEquals:8,12,####"
       },
       "messages": {
         "value": "При использовании символов b в позиции 008/06, значения в позиции 008/07-10 заполняются символом пробела (#)."
@@ -512,7 +512,7 @@
         }
       },
       "validator": {
-        "value": "substringEquals:7,11,||||"
+        "value": "substringEquals:8,12,||||"
       },
       "messages": {
         "value": "При использовании символов | в позиции 008/06, значения в позиции 008/07-10 заполняются символом |."
@@ -526,7 +526,7 @@
         }
       },
       "validator": {
-        "value": "substringEquals:7,11,uuuu"
+        "value": "substringEquals:8,12,uuuu"
       },
       "messages": {
         "value": "При использовании символов n в позиции 008/06, значения в позиции 008/07-10 заполняются символом u."
@@ -610,7 +610,7 @@
         }
       },
       "validator": {
-        "value": "substringEqualsRegex:12,16,^[\\du]{4}$"
+        "value": "substringEqualsRegex:8,12,^[\\du]{4}$"
       },
       "messages": {
         "value": "При использовании символов c, d, e, i, k, m, p, q, r, s, t, u в позиции 008/06, значения в позиции 008/07-10 заполняются символом u и/или цифрами от 0 до 9."
