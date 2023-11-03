@@ -53,14 +53,17 @@ class Validator {
     }
     static substringEqualsRegex(value, start, stop, regex) {
         const regexp = new RegExp(regex);
-        return regexp.test(value.slice(+start - 1, +stop - 1));
+        if (!!start && !!stop) {
+            return regexp.test(value.slice(+start - 1, +stop - 1));
+        }
+        return regexp.test(value);
     }
     static relations(value, equalsIndicators, equalsSubfields, ...args) {
         const code = value.slice(0, 3);
         const index = value.slice(4, 6);
         const fields = args.slice(-1)[0];
-        const relationField = fields.filter((f) => f.code === code)[0];
-        console.log(relationField);
+        const parentIdentity = Validator.instance.currentField['code'] + `-${index}`;
+        const relationField = fields.filter((f) => f.code === code && f['6'] === parentIdentity)[0];
         if (!relationField || !relationField['6'])
             return false;
         const currentField = Validator.instance.currentField;

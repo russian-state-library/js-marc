@@ -1,8 +1,97 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../index");
+index_1.Schema.load('./src/tests/schema/schema.json');
+test('008', () => {
+    index_1.MarkValidator.loadCustomRulesFromSchema({
+        $schema: '',
+        validators: [
+            {
+                "condition": {
+                    "code": "880",
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": {
+                        relations: "false,true",
+                        substringEqualsRegex: ",,^\d{3}-\d{1,}(\(3|\(B|\$1|\(N)|\(2|\(S$"
+                    }
+                },
+                "messages": {
+                    "6": "В указанном ссылочном поле в подполе $6 отсутствуют подполя из поля %code%"
+                }
+            },
+            {
+                "condition": {
+                    "code": "880",
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": {
+                        "substringEqualsRegex": ",,^\d{3}-\d{1,}(\(3|\(B|\$1|\(N)|\(2|\(S$"
+                    }
+                },
+                "messages": {
+                    "6": "Неверно указано значение подполя 6 в поле 880."
+                }
+            },
+            {
+                "condition": {
+                    "code": "880",
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": `substringEqualsRegex:,,^[\\d{3}-\d{}]{4}$`
+                },
+                "messages": {
+                    "6": "В указанном ссылочном поле в подполе $6 отсутствуют подполя из поля %code%"
+                }
+            },
+            {
+                "condition": {
+                    "code": "880",
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": "relations:true,false"
+                },
+                "messages": {
+                    "6": "Значение индикаторов в поле 880 не соответствуют значениям индикаторов поля указанного в подполе $6"
+                }
+            },
+            {
+                "condition": {
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": "relations:false,false"
+                },
+                "messages": {
+                    "6": "Значение подполя $6 поля %code% не соответствует значению ссылки в подполе $6 указанного поля."
+                }
+            },
+        ],
+        required: []
+    });
+    console.log(index_1.Mark.validate([
+        { code: '245', ind1: '', ind2: '', subfields: [{ code: '6', value: '880-01' }] },
+        { code: '880', ind1: '', ind2: '', subfields: [] },
+        { code: '880', ind1: '', ind2: '', subfields: [] },
+        { code: '880', ind1: '', ind2: '', subfields: [] },
+        { code: '880', ind1: '123', ind2: '', subfields: [{ code: '6', value: '245-01' }, { code: 'b', value: '123' }] },
+    ]));
+});
 test('Обязательное подполе $a для полей кроме 260, 534, 541, 760,762,765,767,770,772,773,774,775,776,777,780, 856, 952', () => {
-    index_1.Schema.load('./src/tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -27,7 +116,6 @@ test('Обязательное подполе $a для полей кроме 26
     expect(index_1.Mark.validate([{ code: '260' }])).toEqual([]);
 });
 test('505 t r', () => {
-    index_1.Schema.load('./src/tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -59,7 +147,6 @@ test('505 t r', () => {
     expect(index_1.Mark.validate([{ code: '505', subfields: [{ code: 'r', value: 'any' }, { code: 't', value: 'any' }] }])).toEqual([]);
 });
 test('Обязательное подполе $b для поля 017', () => {
-    index_1.Schema.load('./tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -81,7 +168,6 @@ test('Обязательное подполе $b для поля 017', () => {
     expect(index_1.Mark.validate([{ code: '017', subfields: [{ code: 'b', value: 'any' }] }])).toEqual([]);
 });
 test('Обязательное подполе $2 для поля 024 со значением в первом индикаторе 7', () => {
-    index_1.Schema.load('./tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -105,7 +191,6 @@ test('Обязательное подполе $2 для поля 024 со зна
     expect(index_1.Mark.validate([{ code: '024', ind1: '7', subfields: [{ code: '2', value: '2' }] }])).toEqual([]);
 });
 test('Обязательное подполе $a, $b, $e для поля 040', () => {
-    index_1.Schema.load('./tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -142,7 +227,6 @@ test('Обязательное подполе $a, $b, $e для поля 040', (
     expect(index_1.Mark.validate([{ code: '040', subfields: [{ code: 'a', value: '1' }, { code: 'b', value: '1' }, { code: 'e', value: '1' }] }])).toEqual([]);
 });
 test('Обязательное подполе $d для поля 040, если в подполе $a указано не RuMoRGB.', () => {
-    index_1.Schema.load('./tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -167,7 +251,6 @@ test('Обязательное подполе $d для поля 040, если �
     expect(index_1.Mark.validate([{ code: '040', subfields: [{ code: 'a', value: 'RuMoRGB' }] }])).toEqual([]);
 });
 test('Обязательный первый индикатор при использовании 041 поля.', () => {
-    index_1.Schema.load('./tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -189,7 +272,6 @@ test('Обязательный первый индикатор при испол
     expect(index_1.Mark.validate([{ code: '041', ind1: '1' }])).toEqual([]);
 });
 test('Обязательный первый индикатор при использовании 210 поля.', () => {
-    index_1.Schema.load('./tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -211,7 +293,6 @@ test('Обязательный первый индикатор при испол
     expect(index_1.Mark.validate([{ code: '041', ind1: '1' }])).toEqual([]);
 });
 test('Обязательный первый индикатор при использовании 100 поля.', () => {
-    index_1.Schema.load('./src/tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -235,7 +316,6 @@ test('Обязательный первый индикатор при испол
     expect(index_1.Mark.validate([{ code: '100', ind1: '1' }])).toEqual([]);
 });
 test('Обязательный подполе $h для поля 041, если в позиции первого индикатора указано 1', () => {
-    index_1.Schema.load('./tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -260,7 +340,6 @@ test('Обязательный подполе $h для поля 041, если �
     expect(index_1.Mark.validate([{ code: '041' }])).toEqual([]);
 });
 test('Обязательный подполе $2 для поля 041, если в позиции первого индикатора указано 7', () => {
-    index_1.Schema.load('./tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
@@ -285,7 +364,6 @@ test('Обязательный подполе $2 для поля 041, если �
     expect(index_1.Mark.validate([{ code: '041' }])).toEqual([]);
 });
 test('1 Обязательный подполе $2 для поля 041, если в позиции первого индикатора указано 7', () => {
-    index_1.Schema.load('./tests/schema/schema.json');
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
         validators: [
