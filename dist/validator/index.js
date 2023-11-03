@@ -220,16 +220,18 @@ class Validator {
         for (const validatorsKey in validators) {
             const value = field[validatorsKey];
             const rules = [];
-            let prevIndex = 0;
-            for (let sIndex = 0, sLength = validators[validatorsKey].length; sIndex < sLength; ++sIndex) {
-                const currentSymbol = validators[validatorsKey][sIndex];
-                const nextSymbol = validators[validatorsKey][sIndex + 1];
-                if (currentSymbol === '|' && (nextSymbol !== '|' && !!nextSymbol)) {
-                    rules.push(validators[validatorsKey].substring(prevIndex, sIndex));
-                    prevIndex = sIndex + 1;
+            const splitRules = validators[validatorsKey].split('|');
+            rules.push(splitRules.slice(1).reduce((prevRule, currRule) => {
+                const splitCurrRule = currRule.split(':');
+                if (splitCurrRule[0] in Validator) {
+                    rules.push(prevRule);
+                    prevRule = currRule;
                 }
-            }
-            rules.push(validators[validatorsKey].substring(prevIndex));
+                else {
+                    prevRule += currRule;
+                }
+                return prevRule;
+            }, splitRules[0]));
             for (let index = 0, length = rules.length; index < length; ++index) {
                 let [method, args] = rules[index].split(':');
                 args = args?.split(',');

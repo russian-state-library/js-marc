@@ -328,19 +328,20 @@ export class Validator {
 
             const rules = [];
 
-            let prevIndex = 0;
+            const splitRules = validators[validatorsKey].split('|');
 
-            for (let sIndex = 0, sLength = validators[validatorsKey].length; sIndex < sLength; ++sIndex) {
-                const currentSymbol = validators[validatorsKey][sIndex];
-                const nextSymbol = validators[validatorsKey][sIndex + 1];
+            rules.push(splitRules.slice(1).reduce((prevRule: string, currRule: string) => {
+                const splitCurrRule = currRule.split(':');
 
-                if (currentSymbol === '|' && (nextSymbol !== '|' && !!nextSymbol)) {
-                    rules.push(validators[validatorsKey].substring(prevIndex, sIndex));
-                    prevIndex = sIndex + 1;
+                if (splitCurrRule[0] in Validator) {
+                    rules.push(prevRule);
+                    prevRule = currRule;
+                } else {
+                    prevRule += currRule;
                 }
-            }
 
-            rules.push(validators[validatorsKey].substring(prevIndex));
+                return prevRule
+            }, splitRules[0]));
 
 
             for (let index = 0, length = rules.length; index < length; ++index) {
