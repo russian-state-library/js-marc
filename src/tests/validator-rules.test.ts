@@ -3,7 +3,94 @@ import { Schema, MarkValidator, Mark } from '../index';
 Schema.load('./src/tests/schema/schema.json')
 
 test('008', () => {
-    MarkValidator.substringEquals("230829buuuu1234#######ru###########rus##", '12,16,^[\\du]{4}$')
+    MarkValidator.loadCustomRulesFromSchema({
+        $schema: '',
+        validators: [
+            {
+                "condition": {
+                    "code": "880",
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": {
+                        relations: "false,true",
+                        substringEqualsRegex: ",,^\d{3}-\d{1,}(\(3|\(B|\$1|\(N)|\(2|\(S$"
+                    }
+                },
+                "messages": {
+                    "6": "В указанном ссылочном поле в подполе $6 отсутствуют подполя из поля %code%"
+                }
+            },
+            {
+                "condition": {
+                    "code": "880",
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": {
+                        "substringEqualsRegex": ",,^\d{3}-\d{1,}(\(3|\(B|\$1|\(N)|\(2|\(S$"
+                    }
+                },
+                "messages": {
+                    "6": "Неверно указано значение подполя 6 в поле 880."
+                }
+            },
+            {
+                "condition": {
+                    "code": "880",
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": `substringEqualsRegex:,,^[\\d{3}-\d{}]{4}$`
+                },
+                "messages": {
+                    "6": "В указанном ссылочном поле в подполе $6 отсутствуют подполя из поля %code%"
+                }
+            },
+            {
+                "condition": {
+                    "code": "880",
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": "relations:true,false"
+                },
+                "messages": {
+                    "6": "Значение индикаторов в поле 880 не соответствуют значениям индикаторов поля указанного в подполе $6"
+                }
+            },
+            {
+                "condition": {
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": "relations:false,false"
+                },
+                "messages": {
+                    "6": "Значение подполя $6 поля %code% не соответствует значению ссылки в подполе $6 указанного поля."
+                }
+            },
+        ],
+        required: []
+    })
+
+    console.log(Mark.validate([
+        { code: '245', ind1: '', ind2: '', subfields: [{ code: '6', value: '880-01' }] },
+        { code: '880', ind1: '', ind2: '', subfields: [] },
+        { code: '880', ind1: '', ind2: '', subfields: [] },
+        { code: '880', ind1: '', ind2: '', subfields: [] },
+        { code: '880', ind1: '123', ind2: '', subfields: [{ code: '6', value: '245-01' }, { code: 'b', value: '123' }] },
+    ]))
 })
 
 test('Обязательное подполе $a для полей кроме 260, 534, 541, 760,762,765,767,770,772,773,774,775,776,777,780, 856, 952', () => {
