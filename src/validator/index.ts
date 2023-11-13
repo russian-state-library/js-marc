@@ -143,7 +143,11 @@ export class Validator {
     }
 
     static required(value: any): boolean {
-        return (!!value && !!value.length);
+        if (typeof value === 'string') {
+            return !!value && value.trim().length > 0;
+        } else {
+            return !!value && !!value.length;
+        }
     }
 
     static notRequired(value: any): boolean {
