@@ -92,7 +92,12 @@ class Validator {
         return true;
     }
     static required(value) {
-        return (!!value && !!value.length);
+        if (typeof value === 'string') {
+            return !!value && value.trim().length > 0;
+        }
+        else {
+            return !!value && !!value.length;
+        }
     }
     static notRequired(value) {
         return (typeof value === 'undefined') || (!!value && !value.length);
