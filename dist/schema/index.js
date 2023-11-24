@@ -52,7 +52,7 @@ class Schema {
         const iField = new field_schema_1.Field(field.code, field.required, field.repeatable, field.active_rsl ?? false);
         ['ind1', 'ind2'].forEach(ind => {
             if (!!field[ind]) {
-                iField.indicators.push(new indicator_schema_1.Indicator(ind, field.ind1.codes.map((code) => code.code)));
+                iField.indicators.push(new indicator_schema_1.Indicator(ind, field.ind1.values.map((code) => code.code)));
             }
         });
         (field.subfields ?? [])

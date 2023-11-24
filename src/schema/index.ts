@@ -72,7 +72,7 @@ export class Schema {
                 iField.indicators.push(
                     new Indicator(
                         ind, 
-                        field.ind1.codes.map((code): string => <string>code.code)
+                        field.ind1.values.map((code): string => <string>code.code)
                     )
                 ) 
             }
