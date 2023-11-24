@@ -1,6 +1,6 @@
 {
   "name": "@russian-state-library/js-marc-rsl",
-  "version": "1.1.16",
+  "version": "1.1.17",
   "description": "Library for working with MARC records",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
