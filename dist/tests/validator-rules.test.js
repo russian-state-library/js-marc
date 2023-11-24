@@ -2,6 +2,61 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../index");
 index_1.Schema.load('./src/tests/schema/schema.json');
+test('test', () => {
+    index_1.MarkValidator.loadCustomRulesFromSchema({
+        $schema: '',
+        validators: [
+            {
+                "condition": {
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": "relations:false,false"
+                },
+                "messages": {
+                    "6": "Значение подполя $6 поля %code% не соответствует значению ссылки в подполе $6 указанного поля."
+                }
+            },
+            {
+                "condition": {
+                    "code": "880",
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": "substringEqualsRegex:,,^\\d{3}-\\d*(\\(3|\\(B|\\$1|\\(N)|\\(2|\\(S$"
+                },
+                "messages": {
+                    "6": "Неверно указано значение подполя 6 в поле 880."
+                }
+            }
+        ],
+        required: []
+    });
+    console.log(index_1.MarkValidator.validate([
+        {
+            code: '880',
+            subfields: [
+                {
+                    code: '6',
+                    value: '400-32$1'
+                },
+            ]
+        },
+        {
+            code: '400',
+            subfields: [
+                {
+                    code: '6',
+                    value: '880-32'
+                },
+            ]
+        }
+    ]).getErrors());
+});
 test('Обязательное подполе $a для полей кроме 260, 534, 541, 760,762,765,767,770,772,773,774,775,776,777,780, 856, 952', () => {
     index_1.MarkValidator.loadCustomRulesFromSchema({
         $schema: '',
@@ -269,8 +324,8 @@ test('Обязательный подполе $2 для поля 041, если �
         ],
         required: []
     });
-    expect(index_1.Mark.validate([{ code: '041', ind1: '7' }])).toEqual(["Не передано подполе $2 для поля 041."]);
-    expect(index_1.Mark.validate([{ code: '041', ind1: '7', subfields: [{ code: '2', value: 'any' }] }])).toEqual([]);
+    expect(index_1.Mark.validate([{ code: '041', ind2: '7' }])).toEqual(["Не передано подполе $2 для поля 041."]);
+    expect(index_1.Mark.validate([{ code: '041', ind2: '7', subfields: [{ code: '2', value: 'any' }] }])).toEqual([]);
     expect(index_1.Mark.validate([{ code: '041', ind1: '7' }])).toEqual([]);
     expect(index_1.Mark.validate([{ code: '041' }])).toEqual([]);
 });

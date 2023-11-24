@@ -103,7 +103,7 @@ export class Validator {
 
         const parentIdentity = Validator.instance.currentField['code'] + `-${index}`;
 
-        const relationField = fields.filter((f) => f.code === code && f['6'] === parentIdentity)[0];
+        const relationField = fields.filter((f) => f.code === code && f['6'].startsWith(parentIdentity))[0];
 
         if (!relationField || !relationField['6']) return false;
 
@@ -328,7 +328,7 @@ export class Validator {
         const validators = Validator.instance.validators[validatorIndex];
 
         for (const validatorsKey in validators) {
-            const value = field[validatorsKey];
+            const valueList = (typeof field[validatorsKey] !== 'object') ? [field[validatorsKey]] : field[validatorsKey];
 
             const rules = [];
 
@@ -341,21 +341,22 @@ export class Validator {
                     rules.push(prevRule);
                     prevRule = currRule;
                 } else {
-                    prevRule += currRule;
+                    prevRule += '|' + currRule;
                 }
 
                 return prevRule
             }, splitRules[0]));
 
-
             for (let index = 0, length = rules.length; index < length; ++index) {
                 let [ method, args ] = rules[index].split(':');
 
-                args = args?.split(',');
+                args = args?.split(',') ?? [];
 
-                if (!Validator[method](value, ...(args ?? []), this.fields)) {
-                    this.errors.push(this.formatErrorMessage(Validator.instance.messages[validatorIndex][validatorsKey], field));
-                }
+                valueList.forEach((value: any) => {
+                    if (!Validator[method](value, ...(args), this.fields)) {
+                        this.errors.push(this.formatErrorMessage(Validator.instance.messages[validatorIndex][validatorsKey], field));
+                    }
+                })
             }
         }
 

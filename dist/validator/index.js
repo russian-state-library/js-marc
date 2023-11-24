@@ -63,7 +63,7 @@ class Validator {
         const index = value.slice(4, 6);
         const fields = args.slice(-1)[0];
         const parentIdentity = Validator.instance.currentField['code'] + `-${index}`;
-        const relationField = fields.filter((f) => f.code === code && f['6'] === parentIdentity)[0];
+        const relationField = fields.filter((f) => f.code === code && f['6'].startsWith(parentIdentity))[0];
         if (!relationField || !relationField['6'])
             return false;
         const currentField = Validator.instance.currentField;
@@ -223,7 +223,7 @@ class Validator {
     isValidField(field, validatorIndex) {
         const validators = Validator.instance.validators[validatorIndex];
         for (const validatorsKey in validators) {
-            const value = field[validatorsKey];
+            const valueList = (typeof field[validatorsKey] !== 'object') ? [field[validatorsKey]] : field[validatorsKey];
             const rules = [];
             const splitRules = validators[validatorsKey].split('|');
             rules.push(splitRules.slice(1).reduce((prevRule, currRule) => {
@@ -233,16 +233,18 @@ class Validator {
                     prevRule = currRule;
                 }
                 else {
-                    prevRule += currRule;
+                    prevRule += '|' + currRule;
                 }
                 return prevRule;
             }, splitRules[0]));
             for (let index = 0, length = rules.length; index < length; ++index) {
                 let [method, args] = rules[index].split(':');
-                args = args?.split(',');
-                if (!Validator[method](value, ...(args ?? []), this.fields)) {
-                    this.errors.push(this.formatErrorMessage(Validator.instance.messages[validatorIndex][validatorsKey], field));
-                }
+                args = args?.split(',') ?? [];
+                valueList.forEach((value) => {
+                    if (!Validator[method](value, ...(args), this.fields)) {
+                        this.errors.push(this.formatErrorMessage(Validator.instance.messages[validatorIndex][validatorsKey], field));
+                    }
+                });
             }
         }
         return false;
