@@ -103,7 +103,11 @@ export class Validator {
 
         const parentIdentity = Validator.instance.currentField['code'] + `-${index}`;
 
-        const relationField = fields.filter((f) => f.code === code && f['6'].startsWith(parentIdentity))[0];
+        let relationFields = fields.filter((f) => f.code === code && f['6'].startsWith(parentIdentity));
+
+        if (relationFields.length === 0) return false;
+
+        const relationField = relationFields[0];
 
         if (!relationField || !relationField['6']) return false;
 
