@@ -8,15 +8,30 @@ test('test', () => {
         validators: [
             {
                 "condition": {
+                    "code": "880",
                     "6": {
                         "required": true
                     }
                 },
                 "validator": {
-                    "6": "relations:false,false"
+                    "6": "relations:false,true"
                 },
                 "messages": {
-                    "6": "Значение подполя $6 поля %code% не соответствует значению ссылки в подполе $6 указанного поля."
+                    "6": "В указанном ссылочном поле в подполе $6 отсутствуют подполя из поля %code%"
+                }
+            },
+            {
+                "condition": {
+                    "code": "880",
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
+                    "6": "relations:true,false"
+                },
+                "messages": {
+                    "6": "Значение индикаторов в поле 880 не соответствуют значениям индикаторов поля указанного в подполе $6"
                 }
             },
             {
@@ -43,19 +58,14 @@ test('test', () => {
             subfields: [
                 {
                     code: '6',
-                    value: '400-32/$1'
+                    value: '245-32'
                 },
             ]
         },
         {
-            code: '400',
-            subfields: [
-                {
-                    code: '6',
-                    value: '880-32'
-                },
-            ]
-        }
+            code: '880',
+            subfields: []
+        },
     ]).getErrors())
 });
 
