@@ -27,7 +27,7 @@ test('test', () => {
                     }
                 },
                 "validator": {
-                    "6": "substringEqualsRegex:,,^\\d{3}-\\d*(\\(3|\\(B|\\$1|\\(N)|\\(2|\\(S$"
+                    "6": "substringEqualsRegex:,,^\\d{3}-\\d*\/(\\(3|\\(B|\\$1|\\(N)|\\(2|\\(S$"
                 },
                 "messages": {
                     "6": "Неверно указано значение подполя 6 в поле 880."
@@ -43,7 +43,7 @@ test('test', () => {
             subfields: [
                 {
                     code: '6',
-                    value: '400-32$1'
+                    value: '400-32/$1'
                 },
             ]
         },
@@ -264,6 +264,7 @@ test('Обязательный первый индикатор при испол
     expect(Mark.validate([{ code: '041' }])).toEqual( ["Не передан первый индикатор для поля 041."]);
 
     expect(Mark.validate([{ code: '041', ind1: '1' }])).toEqual( []);
+    expect(Mark.validate([{ code: '041', ind1: '#' }])).toEqual( []);
 });
 
 test('Обязательный первый индикатор при использовании 210 поля.', () => {
@@ -312,7 +313,11 @@ test('Обязательный первый индикатор при испол
 
     expect(Mark.validate([{ code: '100' }])).toEqual( ["Не передан первый индикатор для поля 100."]);
 
+    expect(Mark.validate([{ code: '490' }])).toEqual( ["Не передан первый индикатор для поля 490."]);
+
     expect(Mark.validate([{ code: '100', ind1: '1' }])).toEqual( []);
+
+    expect(Mark.validate([{ code: '490', ind1: '1' }])).toEqual( []);
 });
 
 test('Обязательный подполе $h для поля 041, если в позиции первого индикатора указано 1', () => {
