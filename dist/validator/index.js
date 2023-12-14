@@ -62,33 +62,35 @@ class Validator {
         const code = value.slice(0, 3);
         const index = value.slice(4, 6);
         const fields = args.slice(-1)[0];
-        const parentIdentity = Validator.instance.currentField['code'] + `-${index}`;
-        let relationFields = fields.filter((f) => f.code === code && f['6']?.startsWith(parentIdentity));
+        let parentIdentity = Validator.instance.currentField['code'] + `-${index}`;
+        let relationFields = fields.filter((f) => f.code === code);
         if (relationFields.length === 0)
             return false;
-        const relationField = relationFields[0];
-        if (!relationField || !relationField['6'])
-            return false;
-        const currentField = Validator.instance.currentField;
-        if (equalsSubfields === 'false' && equalsIndicators === 'false') {
-            const relationFieldCode = relationField['6'].slice(0, 3);
-            const relationFieldIndex = relationField['6'].slice(4, 6);
-            //@ts-ignore
-            if (currentField.code !== relationFieldCode || index !== relationFieldIndex)
+        for (let uniqIndex = 0; uniqIndex < relationFields.length; ++uniqIndex) {
+            const relationField = relationFields[uniqIndex];
+            if (!relationField || !relationField['6'])
                 return false;
-        }
-        if (equalsIndicators === 'true'
-            && (
-            //@ts-ignore
-            relationField.ind1 !== currentField.ind1 ||
+            const currentField = Validator.instance.currentField;
+            if (equalsSubfields === 'false' && equalsIndicators === 'false') {
+                const relationFieldCode = relationField['6'].slice(0, 3);
+                const relationFieldIndex = relationField['6'].slice(4, 6);
                 //@ts-ignore
-                relationField.ind2 !== currentField.ind2))
-            return false;
-        if (equalsSubfields === 'true') {
-            const subfields = Object.keys(currentField).filter(key => !['code', 'ind1', 'ind2'].includes(key));
-            for (let i = 0; i < subfields.length; ++i) {
-                if (!(subfields[i] in relationField)) {
+                if (currentField.code !== relationFieldCode || index !== relationFieldIndex)
                     return false;
+            }
+            if (equalsIndicators === 'true'
+                && (
+                //@ts-ignore
+                relationField.ind1 !== currentField.ind1 ||
+                    //@ts-ignore
+                    relationField.ind2 !== currentField.ind2))
+                return false;
+            if (equalsSubfields === 'true') {
+                const subfields = Object.keys(currentField).filter(key => !['code', 'ind1', 'ind2'].includes(key));
+                for (let i = 0; i < subfields.length; ++i) {
+                    if (!(subfields[i] in relationField)) {
+                        return false;
+                    }
                 }
             }
         }

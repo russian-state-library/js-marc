@@ -14,6 +14,20 @@ test('test', () => {
                     }
                 },
                 "validator": {
+                    "6": "relations:false,false"
+                },
+                "messages": {
+                    "6": "Не совпадают"
+                }
+            },
+            {
+                "condition": {
+                    "code": "880",
+                    "6": {
+                        "required": true
+                    }
+                },
+                "validator": {
                     "6": "relations:false,true"
                 },
                 "messages": {
@@ -63,8 +77,22 @@ test('test', () => {
             ]
         },
         {
-            code: '880',
-            subfields: []
+            code: '245',
+            subfields: [
+                {
+                    code: '6',
+                    value: '880-32'
+                },
+            ]
+        },
+        {
+            code: '245',
+            subfields: [
+                {
+                    code: '6',
+                    value: '880-31'
+                },
+            ]
         },
     ]).getErrors())
 });
