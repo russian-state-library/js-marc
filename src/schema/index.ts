@@ -35,6 +35,7 @@ export class Schema {
     }
 
     static load(path: string, parser: ISchemaEncoder = null): Schema {
+        Schema.schemaInstance = null;
         return Schema.schemaInstance = new Schema(path, parser);
     }
 

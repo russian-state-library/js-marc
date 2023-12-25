@@ -26,6 +26,7 @@ class Schema {
         });
     }
     static load(path, parser = null) {
+        Schema.schemaInstance = null;
         return Schema.schemaInstance = new Schema(path, parser);
     }
     static instance() {
