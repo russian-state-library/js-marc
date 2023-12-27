@@ -20,23 +20,33 @@ export class Schema {
         required_value: 'Не передано значение для поля %s.'
     }
 
-    constructor (path: string, encoder: ISchemaEncoder = null) {
-        const schemaContent = <any[]>JSON.parse(readFileSync(path, { encoding: 'utf-8', flag: 'r' })).fields;
+    constructor (config: string|Field[], encoder: ISchemaEncoder = null) {
+        if (typeof config === 'string') {
+            const schemaContent = <any[]>JSON.parse(readFileSync(config.toString(), {
+                encoding: 'utf-8',
+                flag: 'r'
+            })).fields;
 
-        const method = (!!encoder) ? encoder : this.encoder;
+            const method = (!!encoder) ? encoder : this.encoder;
 
-        this.fields = schemaContent.map((field): Field => {
-            const iField = <Field>method(field);
-          
-            this.codes.push(iField.code);
-            
-            return iField;
-        })
+            this.fields = schemaContent.map((field): Field => {
+                const iField = <Field>method(field);
+
+                this.codes.push(iField.code);
+
+                return iField;
+            })
+        } else {
+            this.fields = config.map((field): Field => {
+                this.codes.push(field.code);
+                return field;
+            })
+        }
     }
 
-    static load(path: string, parser: ISchemaEncoder = null): Schema {
+    static load(config: string|Field[], parser: ISchemaEncoder = null): Schema {
         Schema.schemaInstance = null;
-        return Schema.schemaInstance = new Schema(path, parser);
+        return Schema.schemaInstance = new Schema(config, parser);
     }
 
     private static instance(): Schema {

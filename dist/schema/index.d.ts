@@ -5,8 +5,8 @@ export declare class Schema {
     private codes;
     private fields;
     private localization;
-    constructor(path: string, encoder?: ISchemaEncoder);
-    static load(path: string, parser?: ISchemaEncoder): Schema;
+    constructor(config: string | Field[], encoder?: ISchemaEncoder);
+    static load(config: string | Field[], parser?: ISchemaEncoder): Schema;
     private static instance;
     static field(code: string): Field | undefined;
     static fields(): Field[];

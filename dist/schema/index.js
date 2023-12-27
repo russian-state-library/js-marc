@@ -16,18 +16,29 @@ class Schema {
         required_subfield: 'Не передано обязательное подполе $%s для поля %s.',
         required_value: 'Не передано значение для поля %s.'
     };
-    constructor(path, encoder = null) {
-        const schemaContent = JSON.parse((0, fs_1.readFileSync)(path, { encoding: 'utf-8', flag: 'r' })).fields;
-        const method = (!!encoder) ? encoder : this.encoder;
-        this.fields = schemaContent.map((field) => {
-            const iField = method(field);
-            this.codes.push(iField.code);
-            return iField;
-        });
+    constructor(config, encoder = null) {
+        if (typeof config === 'string') {
+            const schemaContent = JSON.parse((0, fs_1.readFileSync)(config.toString(), {
+                encoding: 'utf-8',
+                flag: 'r'
+            })).fields;
+            const method = (!!encoder) ? encoder : this.encoder;
+            this.fields = schemaContent.map((field) => {
+                const iField = method(field);
+                this.codes.push(iField.code);
+                return iField;
+            });
+        }
+        else {
+            this.fields = config.map((field) => {
+                this.codes.push(field.code);
+                return field;
+            });
+        }
     }
-    static load(path, parser = null) {
+    static load(config, parser = null) {
         Schema.schemaInstance = null;
-        return Schema.schemaInstance = new Schema(path, parser);
+        return Schema.schemaInstance = new Schema(config, parser);
     }
     static instance() {
         if (!Schema.instance)
